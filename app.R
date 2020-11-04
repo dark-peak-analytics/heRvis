@@ -14,12 +14,9 @@ rm(list = ls())
 # get the following functions from the library
 library(ggplot2)
 library(darkpeak) # note may need to install from github
-<<<<<<< HEAD
 library(shiny) 
 library(shinyWidgets) 
-=======
-library(shinyWidgets)
->>>>>>> 35fe64217afc443c1f0e368edcd5b4e700fe27a9
+
 
 # source functions
 source("./R/gen_treatment_name_fields.R")

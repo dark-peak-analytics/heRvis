@@ -107,7 +107,7 @@ server <- function(input, output, session){
       # QALYS
       if(nchar(txt_q)>1){
         res_q.temp = read.table(text = txt_q,sep = " ",fill=T)
-        if(length(res_q.temp)>1){
+        if(!is.null(res_q.temp$V1)){
           res_df <- cbind(res_df,res_q.temp[,1])
           print(t_names[q])
           colnames(res_df)[ncol(res_df)] <- paste0(t_names[q]," QALYs")
@@ -117,7 +117,7 @@ server <- function(input, output, session){
       # COSTS
       if(nchar(txt_t)>1){
         res_t.temp = read.table(text = txt_t,sep = " ",fill=T)
-        if(length(res_t.temp)>1){
+        if(!is.null(res_t.temp$V1)){
           res_df <- cbind(res_df,res_t.temp[,1]) 
           colnames(res_df)[ncol(res_df)] <- paste0(t_names[q]," Costs")
         }

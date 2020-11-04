@@ -1,3 +1,4 @@
 outputTab <- tabPanel("Output",
-                      DT::dataTableOutput("table"),
+                      plotOutput(outputId = "CEAC"),
+                      plotOutput(outputId ="CEplane"),
                       footer)

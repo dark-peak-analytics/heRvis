@@ -23,6 +23,9 @@ source("./UI_parts/inputdataTab.R")
 source("./UI_parts/outputTab.R")
 source("./UI_parts/aboutTab.R")
 
+# source functions
+source("./R/gen_treatment_name_fields.R")
+
 
 
 ui <- navbarPage("heRvis",
@@ -34,21 +37,67 @@ ui <- navbarPage("heRvis",
 
 
 server <- function(input, output, session){
-  output$plot <- renderPlot({
-    plot(cars, type=input$plotType)
+  
+  output$CEAC <- renderPlot({
+    makeCEAC()
     })
   
-  output$summary <- renderPrint({
-    summary(cars)
+  output$CEplane <- renderPlot({
+    makeCEPlane()
   })
   
-  output$table <- DT::renderDataTable({
-    DT::datatable(cars)
+  output$validate_q1 <- renderTable({
+    res_Q_inputs = paste0("QALY",1:input$treatments_n)
+    res_T_inputs = paste0("COSTS",1:input$treatments_n)
+    res_df = c()
+    # t_names = grep("treatment_name_",names(input),value = T)
+    t_names = unlist(lapply(grep("treatment_name_",names(input),value = T),function(x)input[[x]]))
+    for(q in 1:input$treatments_n){
+      txt_q = input[[res_Q_inputs[q]]]
+      txt_t = input[[res_T_inputs[q]]]
+      if(nchar(txt_q)>1){
+        res_q.temp = read.table(text = txt_q,sep = " ",fill=T)
+        if(length(res_q.temp)>1){
+          res_df <- cbind(res_df,res_q.temp[,1])
+          print(t_names[q])
+          colnames(res_df)[ncol(res_df)] <- paste0(t_names[q]," QALYs")
+        } 
+      } 
+      if(nchar(txt_t)>1){
+        res_t.temp = read.table(text = txt_t,sep = " ",fill=T)
+        if(length(res_t.temp)>1){
+          res_df <- cbind(res_df,res_t.temp[,1])
+          colnames(res_df)[ncol(res_df)] <- paste0(t_names[q]," Costs")
+        }
+      } 
+    }
+    if(!is.null(res_df)){
+      if(input$remove_1st_row){
+        res_df = res_df[-1,]  
+      }  
+    } else {
+      res_df = c()
+    }
+    head(res_df)
   })
+  
+  
+  
+  output$input_data_ui <- renderUI({
+    # fluidRow(
+    fluidRow(
+      gen_treatment_name_fields(input$treatments_n)
+    )
+  })
+  
+  
+  
+
 }
 
 
 # run the app
 shinyApp(ui = ui, server = server)
+
 
 

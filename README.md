@@ -2,7 +2,7 @@
 
 Shiny App used to build visualizations for Health Economic Evaluations which incorporate uncertainty.
 
-![GitHub release](https://img.shields.io/badge/R-HEDS-green)](https://img.shields.io/badge/R-hello-green)
+[![GitHub release](https://img.shields.io/badge/R-HEDS-green)](https://img.shields.io/badge/R-hello-green)
 
 [Robert Smith](https://www.linkedin.com/in/robert-smith-53b28438) and [Paul Schneider](https://www.sheffield.ac.uk/scharr/staff-pgrs/studentprofiles/paulschneider)
 

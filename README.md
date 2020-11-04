@@ -1,6 +1,6 @@
-# hevis
+# heRvis - Health Economic Visualisations in R
 
-Shiny App used to build visualizations for Health Economic Evaluations which incorporate uncertainty.
+Shiny app used to build visualizations for Health Economic Evaluations which incorporate uncertainty.
 
 [![GitHub release](https://img.shields.io/badge/R-HEDS-green)](https://img.shields.io/badge/R-hello-green)
 

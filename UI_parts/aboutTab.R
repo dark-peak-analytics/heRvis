@@ -1,5 +1,3 @@
-aboutTab <- tabPanel("About",
-                     
-                     footer # footer
+aboutTab <- tabPanel("About"
          
 ) # end tab panel

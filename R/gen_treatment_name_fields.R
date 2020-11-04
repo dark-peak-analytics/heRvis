@@ -1,5 +1,7 @@
 gen_treatment_name_fields = function(n){
-  res = c()
+  
+  res = c() # a list
+  
   for(i in 1:n){
     name_i = textInput(
       inputId = paste0("treatment_name_",i),
@@ -18,7 +20,7 @@ gen_treatment_name_fields = function(n){
     )
     col_i = column(
       width = floor(12/as.numeric(n)),
-      tabPanel(
+      panel(
         name_i,
         column(12,align="center",h4("Copy-paste")),
         br(),
@@ -31,8 +33,10 @@ gen_treatment_name_fields = function(n){
         )
       )
     )
-    # panel_i = panel(col_i)
+    
     res <- list(res,col_i)
   }
   return(res)
 }
+
+gen_treatment_name_fields(10)

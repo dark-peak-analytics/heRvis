@@ -1,4 +1,3 @@
 outputTab <- tabPanel("Output",
                       plotOutput(outputId = "CEAC"),
-                      plotOutput(outputId ="CEplane"),
-                      footer)
+                      plotOutput(outputId ="CEplane"))

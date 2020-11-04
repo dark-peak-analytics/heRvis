@@ -15,6 +15,7 @@ rm(list = ls())
 library(shiny) 
 library(ggplot2)
 library(darkpeak) # note may need to install from github
+library(shinyWidgets)
 
 # source the UI components
 source("./UI_parts/footer.R")
@@ -22,31 +23,44 @@ source("./UI_parts/introTab.R")
 source("./UI_parts/inputdataTab.R")
 source("./UI_parts/outputTab.R")
 source("./UI_parts/aboutTab.R")
+source("./UI_parts/header.R")
+
 
 # source functions
 source("./R/gen_treatment_name_fields.R")
 
 
-
-ui <- navbarPage("heRvis",
+ui <- navbarPage(title = "heRvis",
+                 header = header1,
+                 position = "static-top",
                  introTab,
                  inputdataTab,
                  outputTab,
-                 aboutTab)
+                 aboutTab, 
+                 footer = footer)
 
 
 
 server <- function(input, output, session){
   
   output$validate_q1 <- renderTable({
+    
     res_Q_inputs = paste0("QALY",1:input$treatments_n)
     res_T_inputs = paste0("COSTS",1:input$treatments_n)
-    res_df = c()
+    
+    res_df = c() # value
+    
     # t_names = grep("treatment_name_",names(input),value = T)
-    t_names = unlist(lapply(grep("treatment_name_",names(input),value = T),function(x)input[[x]]))
-    for(q in 1:input$treatments_n){
-      txt_q = input[[res_Q_inputs[q]]]
+    t_names = unlist(lapply(grep("treatment_name_",names(input),value = T),
+                            function(x)input[[x]]))
+    
+    
+    for(q in 1:input$treatments_n){ # loop through treatments
+      
+      txt_q = input[[res_Q_inputs[q]]] 
       txt_t = input[[res_T_inputs[q]]]
+      
+      # QALYS
       if(nchar(txt_q)>1){
         res_q.temp = read.table(text = txt_q,sep = " ",fill=T)
         if(length(res_q.temp)>1){
@@ -54,27 +68,34 @@ server <- function(input, output, session){
           print(t_names[q])
           colnames(res_df)[ncol(res_df)] <- paste0(t_names[q]," QALYs")
         } 
-      } 
+      }
+      
+      # COSTS
       if(nchar(txt_t)>1){
         res_t.temp = read.table(text = txt_t,sep = " ",fill=T)
         if(length(res_t.temp)>1){
-          res_df <- cbind(res_df,res_t.temp[,1])
+          res_df <- cbind(res_df,res_t.temp[,1]) 
           colnames(res_df)[ncol(res_df)] <- paste0(t_names[q]," Costs")
         }
       } 
-    }
+    } # end loop
+    
+    # remove first row if this is selected?
     if(!is.null(res_df)){
       if(input$remove_1st_row){
         res_df = res_df[-1,]  
       }  
     } else {
-      res_df = c()
+      res_df = c() # R.S. ???
     }
-    head(res_df)
+    
+    # return data-frame
+    return(head(res_df,10))
+    
   })
   
   
-  
+  # ?????
   output$input_data_ui <- renderUI({
 
     fluidRow(
@@ -83,17 +104,16 @@ server <- function(input, output, session){
     
   })
   
+  # CEAC
   output$CEAC <- renderPlot({
     makeCEAC()
   })
   
+  # CEPlane
   output$CEplane <- renderPlot({
     makeCEPlane()
   })
   
-  
-  
-
 }
 
 

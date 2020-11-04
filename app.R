@@ -14,23 +14,37 @@ rm(list = ls())
 # get the following functions from the library
 library(shiny) 
 library(ggplot2)
-library(shinythemes)
-library(shinydashboard)
-library(shinydashboardPlus)
 library(darkpeak) # note may need to install from github
 
-# source the components of the app- 
+source("./introTab.R")
+source("./inputdataTab.R")
+source("./inputdataTab.R")
+source("./outputTab.R")
+source("./aboutTab.R")
 
-# source the user-interface components
-source("./header1.R")
-# body
-# footer
+ui <- navbarPage("heRvis",
+                 introTab,
+                 inputdataTab,
+                 outputTab,
+                 aboutTab)
 
-# source the UI itself (it simply calls the above)
-source("./ui.R")
 
-# source the server function
-# server
+
+server <- function(input, output, session) {
+  output$plot <- renderPlot({
+    plot(cars, type=input$plotType)
+  })
+  
+  output$summary <- renderPrint({
+    summary(cars)
+  })
+  
+  output$table <- DT::renderDataTable({
+    DT::datatable(cars)
+  })
+}
+
+
 
 # run the app
 shinyApp(ui = ui, server = server)

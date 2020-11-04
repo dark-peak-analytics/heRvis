@@ -22,7 +22,7 @@ inputdataTab <- tabPanel("Input data",
                              ),
                              fluidRow(
                                column(offset = 1,width = 10,align="center",
-                                      h4("Check: first 5 rows look ok?")
+                                      h4("Check the first and last 5 rows - looks ok?")
                                ),
                                br(),
                                column(offset = 1,width = 10,align="center",

@@ -7,7 +7,8 @@ outputTab <- tabPanel("Output",
                                         inputId = "plotChoice"),
                       
                       
-                      plotOutput(outputId = "Chosenplot")
+                      plotOutput(outputId = "results_plot"),
+                      tableOutput(outputId = "results_tbl")
                         
                         
                       )

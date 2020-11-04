@@ -16,11 +16,11 @@ library(shiny)
 library(ggplot2)
 library(darkpeak) # note may need to install from github
 
-source("./introTab.R")
-source("./inputdataTab.R")
-source("./inputdataTab.R")
-source("./outputTab.R")
-source("./aboutTab.R")
+# source the UI components
+source("./UI_parts/introTab.R")
+source("./UI_parts/inputdataTab.R")
+source("./UI_parts/outputTab.R")
+source("./UI_parts/aboutTab.R")
 
 ui <- navbarPage("heRvis",
                  introTab,
@@ -30,10 +30,10 @@ ui <- navbarPage("heRvis",
 
 
 
-server <- function(input, output, session) {
+server <- function(input, output, session){
   output$plot <- renderPlot({
     plot(cars, type=input$plotType)
-  })
+    })
   
   output$summary <- renderPrint({
     summary(cars)
@@ -43,7 +43,6 @@ server <- function(input, output, session) {
     DT::datatable(cars)
   })
 }
-
 
 
 # run the app

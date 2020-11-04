@@ -1,5 +1,7 @@
 gen_treatment_name_fields = function(n){
-  res = c()
+  
+  res = c() # a list
+  
   for(i in 1:n){
     name_i = textInput(
       inputId = paste0("treatment_name_",i),
@@ -31,8 +33,11 @@ gen_treatment_name_fields = function(n){
         )
       )
     )
+
     res <- list(res,col_i)
   }
 
   return(res)
 }
+
+gen_treatment_name_fields(10)

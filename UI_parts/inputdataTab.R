@@ -17,7 +17,7 @@ inputdataTab <- tabPanel("Input data",
                              fluidRow(
                                column(offset = 1,
                                       width = 10,
-                                      uiOutput("input_data_ui")
+                                      uiOutput(outputId = "input_data_ui")
                                )
                              ),
                              fluidRow(
@@ -29,5 +29,5 @@ inputdataTab <- tabPanel("Input data",
                                       tableOutput("validate_q1")
                                       )
                                )
-                           )
+                             )
                          )

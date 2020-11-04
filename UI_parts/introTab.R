@@ -8,12 +8,15 @@ introTab <- tabPanel("Introduction",
                      
                      p("No programming knowledge is required. The app creates all plots using a variety of plotting packages available in R in the background"),
                      
-                     p("These plots can then be downloaded and used in reports.")
+                     p("These plots can then be downloaded and used in reports."),
                      
-                ))# , # close column and row
+                     p("If you have any comments or suggestions feel free to contact us at: ", 
+                       tags$a(href="https://www.darkpeakanalytics.com/", 
+                              "Dark Peak Analytics."))
+                     
+
+                )) # close column and row
                 
-                # footer  # footer
+
                      
-                     #p("If you have any comments or suggestions feel free to contact us at: ", tags$a(href="https://www.darkpeakanalytics.com/", "Dark Peak Analytics."))
-                     
-) # close tabpanel
+) # close tabPanel

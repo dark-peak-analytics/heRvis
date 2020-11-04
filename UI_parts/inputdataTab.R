@@ -26,11 +26,9 @@ inputdataTab <- tabPanel("Input data",
                                ),
                                br(),
                                column(offset = 1,width = 10,align="center",
-                                      div(class="panel1",
-                                          tableOutput("validate_q1")
+                                      tableOutput("validate_q1")
                                       )
                                )
-                             )
                            ),
                          # custom footer
                          footer)

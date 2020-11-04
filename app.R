@@ -38,14 +38,6 @@ ui <- navbarPage("heRvis",
 
 server <- function(input, output, session){
   
-  output$CEAC <- renderPlot({
-    makeCEAC()
-    })
-  
-  output$CEplane <- renderPlot({
-    makeCEPlane()
-  })
-  
   output$validate_q1 <- renderTable({
     res_Q_inputs = paste0("QALY",1:input$treatments_n)
     res_T_inputs = paste0("COSTS",1:input$treatments_n)
@@ -84,10 +76,19 @@ server <- function(input, output, session){
   
   
   output$input_data_ui <- renderUI({
-    # fluidRow(
+
     fluidRow(
       gen_treatment_name_fields(input$treatments_n)
     )
+    
+  })
+  
+  output$CEAC <- renderPlot({
+    makeCEAC()
+  })
+  
+  output$CEplane <- renderPlot({
+    makeCEPlane()
   })
   
   

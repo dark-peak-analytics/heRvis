@@ -60,7 +60,7 @@ ui <- navbarPage("heRvis",id = "main_panel",
                   padding-left:40 px;
                   }
                   .tab-pane {
-                  margin-bottom: 100px;
+                  margin-bottom: 150px;
                   }
                   .footer {
                   position:fixed;
@@ -95,7 +95,7 @@ server <- function(input, output, session){
     res_df = c() # value
     
     # t_names = grep("treatment_name_",names(input),value = T)
-    t_names = unlist(lapply(grep("treatment_name_",names(input),value = T),
+    t_names = unlist(lapply(paste0("treatment_name_",1:input$treatments_n),
                             function(x)input[[x]]))
     
     

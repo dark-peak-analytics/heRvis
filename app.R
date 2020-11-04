@@ -130,7 +130,7 @@ server <- function(input, output, session){
         res_df = res_df[-1,]  
       }  
     } else {
-      res_df = c() # R.S. ???
+      res_df = c() 
     }
     
     # return data-frame
@@ -147,15 +147,26 @@ server <- function(input, output, session){
     
   })
   
-  # CEAC
-  output$CEAC <- renderPlot({
-    makeCEAC()
+  values <- reactiveValues(
+    plotName = "CEAC"
+  )
+  
+  observeEvent(eventExpr = input$plotChoice,{
+    values$plotName = input$plotChoice
   })
   
-  # CEPlane
-  output$CEplane <- renderPlot({
-    makeCEPlane()
-  })
+  # Plot based on choice
+  output$Chosenplot <- renderPlot({
+      if(values$plotName == "CEAC"){
+        makeCEAC()
+        }else if(values$plotName == "CEPlane"){
+          makeCEPlane()
+        } else{
+          ggplot()
+        }
+      }) # close render-plot
+
+  
   
 }
 

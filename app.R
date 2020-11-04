@@ -173,69 +173,50 @@ server <- function(input, output, session){
   output$Chosenplot <- renderPlot({
     
     
-    
-    
-    
-    res_Q_inputs = paste0("QALY",1:input$treatments_n)
-    res_T_inputs = paste0("COSTS",1:input$treatments_n)
-    
-    res_t = c()
-    res_q = c()
-    
-    t_names = unlist(lapply(paste0("treatment_name_",1:input$treatments_n),
+    treatment_names = unlist(lapply(paste0("treatment_name_",1:input$treatments_n),
                             function(x)input[[x]]))
-    for(q in 1:input$treatments_n){ # loop through treatments
-      
-      txt_q = input[[res_Q_inputs[q]]]
-      txt_t = input[[res_T_inputs[q]]]
-      
-      
-      # QALYS
-      if(nchar(txt_q)>1){
-        res_q.temp = read.table(text = txt_q,sep = " ",fill=T)
-        res_q <- cbind(res_q,res_q.temp[,1])
-        colnames(res_q)[ncol(res_q)] <- paste0(t_names[q]," QALYs")
-      }
-      
-      # COSTS
-      if(nchar(txt_t)>1){
-        res_t.temp = read.table(text = txt_t,sep = " ",fill=T)
-        res_t <- cbind(res_t,res_t.temp[,1])
-        colnames(res_t)[ncol(res_t)] <- paste0(t_names[q]," Costs")
-      }
-    } # end loop
     
-    
-    # remove first row if this is selected?
-    if(!is.null(res_t)){
-      if(input$remove_1st_row){
-        res_t = res_t[-1,]
+    getValues = function(treatment_names,type="QALY",rm1=F){
+      res_Q_inputs = paste0(type,seq_along(treatment_names))
+      res = c()
+      for(q in res_Q_inputs){
+        txt = input[[q]]
+        res.temp = read.table(text = txt,sep = " ",fill=T)
+        res <- cbind(res,as.numeric(res.temp[,1]))
       }
-    }
-    if(!is.null(res_q)){
-      if(input$remove_1st_row){
-        res_q = res_q[-1,]
+      if(rm1){
+        res = res[-1,]
       }
+      colnames(res) = treatment_names
+      res = res[complete.cases(res),]
+      return(res)
     }
     
-    #makeCEAC(total_costs = res_t,total_qalys = res_q)
+      qalys = getValues(treatment_names = treatment_names,
+                        type = "QALY",
+                        rm1 = input$remove_1st_row
+                        )
     
-    
-    
+    costs = getValues(treatment_names = treatment_names,
+                      type = "COSTS",
+                      rm1 = input$remove_1st_row
+                      )
     
       if(values$plotName == "CEAC"){
         
         makeCEAC(
-          total_costs = res_t,
-          total_qalys = res_q,
-          treatment = 1:input$treatments_n
+          total_costs = qalys,
+          total_qalys = costs,
+          treatment = treatment_names
           )
         
         }else if(values$plotName == "CEPlane"){
           
-          makeCEPlane(total_costs = res_t,
-                      total_qalys = res_q,
-                      comparitor = 1)
+          makeCEPlane(
+            total_costs = costs,
+            total_qalys = qalys,
+            comparitor = treatment_names[1],
+            treatment = treatment_names[-1])
           
         } else{
           

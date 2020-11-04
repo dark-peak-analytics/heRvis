@@ -20,6 +20,8 @@ library(shinyWidgets)
 
 # source functions
 source("./R/gen_treatment_name_fields.R")
+source("./R/ceac.R")
+source("./R/cep.R")
 # source the UI components
 source("./UI_parts/footer.R")
 source("./UI_parts/introTab.R")
@@ -87,6 +89,10 @@ ui <- navbarPage("heRvis",id = "main_panel",
 
 server <- function(input, output, session){
   
+  
+  
+  
+  
   output$validate_q1 <- renderTable({
     
     res_Q_inputs = paste0("QALY",1:input$treatments_n)
@@ -109,7 +115,6 @@ server <- function(input, output, session){
         res_q.temp = read.table(text = txt_q,sep = " ",fill=T)
         if(!is.null(res_q.temp$V1)){
           res_df <- cbind(res_df,res_q.temp[,1])
-          print(t_names[q])
           colnames(res_df)[ncol(res_df)] <- paste0(t_names[q]," QALYs")
         } 
       }
@@ -155,14 +160,87 @@ server <- function(input, output, session){
     values$plotName = input$plotChoice
   })
   
+  
+  
+  
+  
+  
+  
+  
+  
+  
   # Plot based on choice
   output$Chosenplot <- renderPlot({
+    
+    
+    
+    
+    
+    res_Q_inputs = paste0("QALY",1:input$treatments_n)
+    res_T_inputs = paste0("COSTS",1:input$treatments_n)
+    
+    res_t = c()
+    res_q = c()
+    
+    t_names = unlist(lapply(paste0("treatment_name_",1:input$treatments_n),
+                            function(x)input[[x]]))
+    for(q in 1:input$treatments_n){ # loop through treatments
+      
+      txt_q = input[[res_Q_inputs[q]]]
+      txt_t = input[[res_T_inputs[q]]]
+      
+      
+      # QALYS
+      if(nchar(txt_q)>1){
+        res_q.temp = read.table(text = txt_q,sep = " ",fill=T)
+        res_q <- cbind(res_q,res_q.temp[,1])
+        colnames(res_q)[ncol(res_q)] <- paste0(t_names[q]," QALYs")
+      }
+      
+      # COSTS
+      if(nchar(txt_t)>1){
+        res_t.temp = read.table(text = txt_t,sep = " ",fill=T)
+        res_t <- cbind(res_t,res_t.temp[,1])
+        colnames(res_t)[ncol(res_t)] <- paste0(t_names[q]," Costs")
+      }
+    } # end loop
+    
+    
+    # remove first row if this is selected?
+    if(!is.null(res_t)){
+      if(input$remove_1st_row){
+        res_t = res_t[-1,]
+      }
+    }
+    if(!is.null(res_q)){
+      if(input$remove_1st_row){
+        res_q = res_q[-1,]
+      }
+    }
+    
+    #makeCEAC(total_costs = res_t,total_qalys = res_q)
+    
+    
+    
+    
       if(values$plotName == "CEAC"){
-        makeCEAC()
+        
+        makeCEAC(
+          total_costs = res_t,
+          total_qalys = res_q,
+          treatment = 1:input$treatments_n
+          )
+        
         }else if(values$plotName == "CEPlane"){
-          makeCEPlane()
+          
+          makeCEPlane(total_costs = res_t,
+                      total_qalys = res_q,
+                      comparitor = 1)
+          
         } else{
+          
           ggplot()
+          
         }
       }) # close render-plot
 

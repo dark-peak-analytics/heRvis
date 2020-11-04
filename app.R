@@ -17,10 +17,13 @@ library(ggplot2)
 library(darkpeak) # note may need to install from github
 
 # source the UI components
+source("./UI_parts/footer.R")
 source("./UI_parts/introTab.R")
 source("./UI_parts/inputdataTab.R")
 source("./UI_parts/outputTab.R")
 source("./UI_parts/aboutTab.R")
+
+
 
 ui <- navbarPage("heRvis",
                  introTab,

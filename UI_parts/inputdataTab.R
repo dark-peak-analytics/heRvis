@@ -29,6 +29,5 @@ inputdataTab <- tabPanel("Input data",
                                       tableOutput("validate_q1")
                                       )
                                )
-                           ),
-                         # custom footer
-                         footer)
+                           )
+                         )

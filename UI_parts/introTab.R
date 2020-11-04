@@ -10,9 +10,9 @@ introTab <- tabPanel("Introduction",
                      
                      p("These plots can then be downloaded and used in reports.")
                      
-                )), # close column and row
+                ))# , # close column and row
                 
-                footer  # footer
+                # footer  # footer
                      
                      #p("If you have any comments or suggestions feel free to contact us at: ", tags$a(href="https://www.darkpeakanalytics.com/", "Dark Peak Analytics."))
                      

@@ -1,14 +1,18 @@
-footer <- tags$footer(tags$img(src = "Logo_Final.jpg", width = "150px", height = "150px"),
-            tags$br(),
-            "heRvis was created by Robert Smith & Paul Schneider of",
-            tags$a(href="https://www.darkpeakanalytics.com/", "Dark Peak Analytics."),
-            tags$br(),
-            "For more information contact",
-            tags$b("darkpeakanalytics@gmail.com"),
-            style = "position:absolute;
-                       bottom:50px;
-                       height:200px;
-                       padding: 0px;
-                       background-color: white;
-                       "
+footer = div(
+  class="footer",
+  style="line-height: 20px;",
+  br(),
+  column(1,align="right",
+         HTML("<img src='logo_concise.png' width='87px' height='100px'/>")
+  ),
+  column(offset=1,8,
+         br(),
+         HTML("<p><b>heRvis</b> was created by Robert Smith & Paul Schneider of"),
+         tags$a(href="https://www.darkpeakanalytics.com/", "Dark Peak Analytics."),
+         HTML("</p>"),
+         HTML("<p>For more information contact"),
+         tags$b("darkpeakanalytics@gmail.com"),
+         HTML("</p>")
+  )
+  
 )

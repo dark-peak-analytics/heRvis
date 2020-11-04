@@ -12,10 +12,13 @@
 rm(list = ls())
 
 # get the following functions from the library
-library(shiny) 
 library(ggplot2)
 library(darkpeak) # note may need to install from github
+library(shiny) 
+library(shinyWidgets) 
 
+# source functions
+source("./R/gen_treatment_name_fields.R")
 # source the UI components
 source("./UI_parts/footer.R")
 source("./UI_parts/introTab.R")
@@ -23,17 +26,59 @@ source("./UI_parts/inputdataTab.R")
 source("./UI_parts/outputTab.R")
 source("./UI_parts/aboutTab.R")
 
-# source functions
-source("./R/gen_treatment_name_fields.R")
 
 
 
-ui <- navbarPage("heRvis",
+
+ui <- navbarPage("heRvis",id = "main_panel",
+                 
+                 header =
+                   
+                   tags$head(
+                     tags$style(
+                       HTML(
+                         "
+        @import url('https://rsms.me/inter/inter.css');
+                  html { font-family: 'Inter'; }
+                  body {
+                  background-color: #F5F6F7;
+                  color: #26384E;
+                  font-weight: 450;
+                  font-family: Inter;
+                  font-size: 14px;
+                  }
+                  .panel1 {
+                  background-color: white;
+                  border: 1px solid #5F9EA0;
+                  border-radius: 10px;
+                  padding:20px;
+                  padding-right:40 px;
+                  padding-left:40 px;
+                  }
+                  .tab-pane {
+                  margin-bottom: 100px;
+                  }
+                  .footer {
+                  position:fixed;
+                  bottom:0px;
+                  right:0px;
+                  left:0px;
+                  height:120px;
+                  background-color: white;
+                  margin-top:0px;
+                  padding-top:0px;
+                  padding-left:40px;
+                  margin-bottom:10px;
+                  border-top: 1px solid;
+                  }
+                  "))),
                  introTab,
                  inputdataTab,
                  outputTab,
-                 aboutTab)
-
+                 aboutTab,
+                 footer = footer 
+                 )
+                 
 
 
 server <- function(input, output, session){
@@ -72,7 +117,6 @@ server <- function(input, output, session){
     }
     head(res_df)
   })
-  
   
   
   output$input_data_ui <- renderUI({

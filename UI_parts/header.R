@@ -35,4 +35,16 @@ header1 <- tags$head(
                   margin-bottom:10px;
                   border-top: 1px solid;
                   }
-                  ")))
+                  
+      ")))
+
+
+
+#.navbar-nav > li > a, .navbar-brand {
+#  padding-top:4px !important; 
+#  padding-bottom:0 !important;
+#  height: 150px;
+#}
+#.navbar {min-height:150px !important;}
+
+

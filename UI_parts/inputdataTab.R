@@ -5,7 +5,7 @@ inputdataTab <- tabPanel(
     column(
       offset  = 10,
       width = 2,
-      actionButton("showInstruct", "Instructions")
+      actionButton(inputId = "showInstruct",label =  icon(name ="info-circle"))
     )),
     
     fluidRow(

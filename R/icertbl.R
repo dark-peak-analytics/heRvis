@@ -2,6 +2,17 @@
 createICERtable = function (total_costs = example_TC, total_qalys = example_TQ, 
                             ref_index = 1, ci = T) 
 {
+
+if(ncol(total_costs)<2){
+  return(DT::datatable(data = data.frame("NO DATA"))
+)
+}
+if(ncol(total_qalys)<2){
+return(DT::datatable(data = data.frame("NO DATA"="")))
+}
+
+ref_index = which(colnames(total_costs) == ref_index)
+
   n = ncol(total_costs)
   c_f = function(x, d = 2, ci = T) {
     x = c(mean(x), quantile(x, probs = c(0.025, 0.975)))

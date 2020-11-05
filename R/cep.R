@@ -4,6 +4,15 @@ makeCEPlane = function (total_costs = example_TC, total_qalys = example_TQ,
                         comparitor = "notreat", treatment = "treat 1", thresh = 30000, 
                         show_ellipse = F) 
 {
+
+if(ncol(total_costs)<2){
+  return(ggplot()+  geom_label(aes(x=1,y=1,label = "NO DATA"),size=20)
+)
+}
+if(ncol(total_qalys)<2){
+  return(ggplot()+ggtitle("NO DATA"))
+}
+
   ce_plane_plot = ggplot2::ggplot() + ggplot2::geom_vline(xintercept = 0) + 
     ggplot2::geom_hline(yintercept = 0) + ggplot2::theme_minimal() + 
     ggplot2::labs(title = "Cost-effectiveness Plane", subtitle = paste0("Results of Probabilistic Sensitivity Analysis:")) + 
@@ -52,6 +61,6 @@ makeCEPlane = function (total_costs = example_TC, total_qalys = example_TQ,
       #                                                                                                                                                                                                                                  legend.text = ggplot2::element_text(size = 11), legend.title = ggplot2::element_text(size = 11), 
       #                                                                                                                                                                                                                                  title = ggplot2::element_text(size = 11))
   }
-  ce_plane_plot
+  # ce_plane_plot
   return(ce_plane_plot)
 }

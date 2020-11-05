@@ -38,8 +38,8 @@ source("./UI_parts/showDataModal.R")
 
 
 
-sample_cost = darkpeak::example_TC[,2:4]
-sample_qalys = darkpeak::example_TQ[,2:4]
+sample_cost = darkpeak::example_TC[,c(3,2,4)]
+sample_qalys = darkpeak::example_TQ[,c(3,2,4)]
 sample_names = c("Standard of Care", "Dupimap","Supimap")
 
 
@@ -69,15 +69,19 @@ server <- function(input, output, session){
   
   
   # this needs to be read in HERE in the server
-  getValues = function(treatment_names,type="QALY",rm1=F,add_label =""){
+  getValues = function(treatment_names,type="QALY",rm1=F,add_label ="")
+  {
     res_Q_inputs = paste0(type,seq_along(treatment_names))
     res = c()
     for(q in res_Q_inputs){
       txt = input[[q]]
-      if(is.null(txt)){
-        print("Empty input")
-        return(NULL)
+      if (is.null(txt)) {
+        return(data.frame(c("",""), c("","")))
       }
+       if (nchar(txt)<2) {
+        return(data.frame())
+      }
+      
       res.temp = read.table(text = txt,sep = " ",fill=T)
       res <- cbind(res,as.numeric(res.temp[,1]))
     }
@@ -89,10 +93,23 @@ server <- function(input, output, session){
     return(res)
   }
   
+
+
+  observeEvent(
+    lapply(paste0("treatment_name_", 1:input$treatments_n), function(x) input[[x]]),
+    {
+      choices = lapply(paste0("treatment_name_", 1:input$treatments_n), function(x) input[[x]])
+      if(!is.null(choices)){
+        choices = unlist(choices)
+      updateSelectInput(session, "ref_index",choices = choices,selected = choices[1])
+      }
+      
+    }
+  )
   
   
   
-  output$validate_q1 <- renderTable({
+  output$validate_q1 <- renderTable(rownames=T,{
     
     resinputs = paste0(
       rep(c("QALY","COSTS"),times = input$treatments_n),
@@ -123,13 +140,16 @@ server <- function(input, output, session){
         res_df = res_df[-1, ]
       }
       res_df = round(res_df,2)
+      rownames(res_df) = 1:nrow(res_df)
       res_df = rbind(
-        head(res_df,5),
-        rep("...",times=ncol(res_df)),
-        tail(res_df,5)
-        )
-    } else {
-      res_df = c() 
+        head(res_df, 5),
+        rep("...", times = ncol(res_df)),
+        tail(res_df, 5)
+      )
+    } 
+
+    if(is.null(res_df)){
+      res_df = ""
     }
     
     # return data-frame
@@ -157,7 +177,7 @@ server <- function(input, output, session){
   
   observeEvent(input$treatments_n,{ # waits until treatments_n is updated
     if(isolate(step12())==2){ # checks if it is supposed to put in new values
-      lapply(3:1,function(x){
+      lapply(1:3,function(x){
         updateTextInput(session,paste0("treatment_name_",x),value = sample_names[x])
         updateTextAreaInput(session, paste0("QALY",x),value= paste(sample_qalys[,x],collapse ="\n"))
         updateTextAreaInput(session, paste0("COSTS",x),value=paste(sample_cost[,x],collapse ="\n"))
@@ -180,9 +200,11 @@ server <- function(input, output, session){
     
     
     # retrive names, qalys, and costs from text fields
-    
+
     n = input$treatments_n
+    
     if(!is.null(n)){
+
     treatment_names = unlist(lapply(
       paste0("treatment_name_",1:input$treatments_n),
                                     function(x)input[[x]]))
@@ -198,41 +220,59 @@ server <- function(input, output, session){
                       rm1 = input$remove_1st_row
     )
     
-  # create plot output
-    if(input$plotChoice == "CEPlane"){
-      output$results_plot <- renderPlot({
-        makeCEPlane(
-          total_costs = costs,
-          total_qalys = qalys,
-          comparitor = treatment_names[1],
-          treatment = treatment_names[-1])
-      })
-    }
+    
+    # if (ncol(qalys) >= 2 & ncol(costs) >= 2) {
 
-    if(input$plotChoice == "CEAC"){
-      output$results_plot <- renderPlot({
-        makeCEAC(
-          total_costs = costs,
+      # create plot output
+      if (input$plotChoice == "CEPlane") {
+        output$results_plot <- renderPlot({
+          makeCEPlane(
+            total_costs = costs,
+            total_qalys = qalys,
+            comparitor = input$ref_index,
+            treatment = treatment_names[-which(treatment_names == input$ref_index)]
+          )
+        })
+      }
+
+      if (input$plotChoice == "CEAC") {
+        output$results_plot <- renderPlot({
+          makeCEAC(
+            total_costs = costs,
+            total_qalys = qalys,
+            treatment = treatment_names
+          )
+        })
+      }
+
+      # always create tbl
+      output$results_tbl <- renderDataTable({
+        createICERtable(
+          total_costs = costs, 
           total_qalys = qalys,
-          treatment = treatment_names
+          ref_index = input$ref_index
           )
       })
-    }
 
-    # always create tbl
-      output$results_tbl <- renderDataTable({
-        createICERtable(total_costs = costs,total_qalys = qalys)
-      })
-      
       # hide/show depending on selection
-      if(input$plotChoice == "CEAC" | input$plotChoice == "CEPlane"){
+      if (input$plotChoice == "CEAC" | input$plotChoice == "CEPlane") {
         hide("results_tbl")
         show("results_plot")
-      }else{
+      } else {
         hide("results_plot")
         show("results_tbl")
       }
+    #  }  selse {
+    #   output$results_plot <- renderPlot({
+    #     ggplot()
+    #   })
+    #   output$results_tbl <- renderDataTable({
+    #     "No Data"
+    #   })
+    # } 
     }
+
+    
 
   })
   

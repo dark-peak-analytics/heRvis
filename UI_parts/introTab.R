@@ -2,7 +2,7 @@ introTab <-
   tabPanel(title = "Introduction",
     
     
-    fluidRow(column(width = 3,
+    fluidRow(column(offset=1,width = 2,
                     div(HTML("<img src='hexSticker.png' width='150px' height='150px'/>"))),
       
       column(

@@ -23,7 +23,7 @@ p <- ggplot(aes(x = Q, y = C),
 
 
 sticker(p, package="heRvis", filename="www/hexSticker.png",
-        p_y = 1.5, p_size=20, p_color = "black",
+        p_y = 1.4, p_size=13, p_color = "black",
         h_fill = "grey90",h_color = "black",
         s_x=1.13, s_y=0.8, 
         s_width=1, s_height=1)

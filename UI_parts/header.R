@@ -27,10 +27,10 @@ header1 <- tags$head(
                   bottom:0px;
                   right:0px;
                   left:0px;
-                  height:120px;
+                  height:90px;
                   background-color: white;
                   margin-top:0px;
-                  padding-top:0px;
+                  padding-top:15px;
                   padding-left:40px;
                   margin-bottom:10px;
                   border-top: 1px solid;

@@ -1,14 +1,20 @@
-outputTab <- tabPanel("Customise & Download",
+outputTab <- tabPanel("Output",
                       
                       # add choice of plot
-                      radioGroupButtons(choices = c("CEAC","CEPlane","ICER-Table"),
-                                        selected = "CEPlane",
-                                        label = "Choice",
-                                        inputId = "plotChoice"),
-                      
-                      
-                      plotOutput(outputId = "results_plot"),
-                      dataTableOutput(outputId = "results_tbl")
-                        
+                      panel(
+                          align = "center",
+                          radioGroupButtons(
+                              choices = c("CEAC", "CEPlane", "ICER-Table"),
+                              selected = "CEPlane",
+                              label = "Choice",
+                              inputId = "plotChoice",
+                              status = "primary"
+                          ),
+                          hr(),
+
+
+                          plotOutput(outputId = "results_plot", height = "500px",width = "100%"),
+                          dataTableOutput(outputId = "results_tbl")
+                      )
                         
                       )

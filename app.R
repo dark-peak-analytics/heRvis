@@ -64,7 +64,7 @@ server <- function(input, output, session){
   })
   
   observeEvent(input$showDataModal, {
-    showModal(showDataModal)
+    showModal(showDataModal(input))
   })
   
   
@@ -112,16 +112,17 @@ server <- function(input, output, session){
         res.temp = read.table(text = txt,sep = " ",fill=T)
         if(!is.null(res.temp$V1)){
           res_df <- cbind(res_df,res.temp[,1]) 
-          colnames(res_df)[ncol(res_df)] <- paste0(t_names[q])
+          colnames(res_df)[ncol(res_df)] <- paste0(resinputs[q], " (", t_names[q], ")")
         }
       } 
     } # end loop
     
     # remove first row if this is selected?
     if(!is.null(res_df)){
-      if(input$remove_1st_row){
-        res_df = res_df[-1,]  
-      } 
+      if (input$remove_1st_row) {
+        res_df = res_df[-1, ]
+      }
+      res_df = round(res_df,2)
       res_df = rbind(
         head(res_df,5),
         rep("...",times=ncol(res_df)),
@@ -156,7 +157,7 @@ server <- function(input, output, session){
   
   observeEvent(input$treatments_n,{ # waits until treatments_n is updated
     if(isolate(step12())==2){ # checks if it is supposed to put in new values
-      lapply(1:3,function(x){
+      lapply(3:1,function(x){
         updateTextInput(session,paste0("treatment_name_",x),value = sample_names[x])
         updateTextAreaInput(session, paste0("QALY",x),value= paste(sample_qalys[,x],collapse ="\n"))
         updateTextAreaInput(session, paste0("COSTS",x),value=paste(sample_cost[,x],collapse ="\n"))

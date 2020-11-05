@@ -25,6 +25,7 @@ source("./R/gen_treatment_name_fields.R")
 source("./R/ceac.R")
 source("./R/cep.R")
 source("./R/icertbl.R")
+
 # source the UI components
 source("./UI_parts/footer.R")
 source("./UI_parts/introTab.R")
@@ -41,48 +42,9 @@ sample_names = c("Standard of Care", "Dupimap","Supimap")
 
 
 
-ui <- navbarPage("heRvis",id = "main_panel",
-                 
-                 header =
-                   
-                   tags$head(
-                     tags$style(
-                       HTML(
-                         "
-        @import url('https://rsms.me/inter/inter.css');
-                  html { font-family: 'Inter'; }
-                  body {
-                  background-color: #F5F6F7;
-                  color: #26384E;
-                  font-weight: 450;
-                  font-family: Inter;
-                  font-size: 14px;
-                  }
-                  .panel1 {
-                  background-color: white;
-                  border: 1px solid #5F9EA0;
-                  border-radius: 10px;
-                  padding:20px;
-                  padding-right:40 px;
-                  padding-left:40 px;
-                  }
-                  .tab-pane {
-                  margin-bottom: 150px;
-                  }
-                  .footer {
-                  position:fixed;
-                  bottom:0px;
-                  right:0px;
-                  left:0px;
-                  height:120px;
-                  background-color: white;
-                  margin-top:0px;
-                  padding-top:0px;
-                  padding-left:40px;
-                  margin-bottom:10px;
-                  border-top: 1px solid;
-                  }
-                  "))),
+ui <- navbarPage(title = "heRvis",
+                 id = "main_panel",
+                 header = header1,
                  introTab,
                  inputdataTab,
                  outputTab,

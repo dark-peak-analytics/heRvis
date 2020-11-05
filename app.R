@@ -18,11 +18,13 @@ library(shiny)
 library(shinyWidgets) 
 library(dampack)
 library(shinyjs)
+library(DT)
 
 # source functions
 source("./R/gen_treatment_name_fields.R")
 source("./R/ceac.R")
 source("./R/cep.R")
+source("./R/icertbl.R")
 # source the UI components
 source("./UI_parts/footer.R")
 source("./UI_parts/introTab.R")
@@ -32,7 +34,9 @@ source("./UI_parts/aboutTab.R")
 source("./UI_parts/header.R")
 
 
-
+sample_cost = darkpeak::example_TC[,2:4]
+sample_qalys = darkpeak::example_TQ[,2:4]
+sample_names = c("Standard of Care", "Dupimap","Supimap")
 
 
 
@@ -79,11 +83,11 @@ ui <- navbarPage("heRvis",id = "main_panel",
                   border-top: 1px solid;
                   }
                   "))),
-                 useShinyjs(),
                  introTab,
                  inputdataTab,
                  outputTab,
                  aboutTab,
+                 useShinyjs(),
                  footer = footer 
                  )
                  
@@ -91,42 +95,51 @@ ui <- navbarPage("heRvis",id = "main_panel",
 
 server <- function(input, output, session){
   
+  # this needs to be read in HERE in the server
+  getValues = function(treatment_names,type="QALY",rm1=F,add_label =""){
+    res_Q_inputs = paste0(type,seq_along(treatment_names))
+    res = c()
+    for(q in res_Q_inputs){
+      txt = input[[q]]
+      if(is.null(txt)){
+        print("Empty input")
+        return(NULL)
+      }
+      res.temp = read.table(text = txt,sep = " ",fill=T)
+      res <- cbind(res,as.numeric(res.temp[,1]))
+    }
+    if(rm1){
+      res = res[-1,]
+    }
+    colnames(res) = paste0(treatment_names,add_label)
+    res = res[complete.cases(res),]
+    return(res)
+  }
   
   
   
   
   output$validate_q1 <- renderTable({
     
-    res_Q_inputs = paste0("QALY",1:input$treatments_n)
-    res_T_inputs = paste0("COSTS",1:input$treatments_n)
+    resinputs = paste0(
+      rep(c("QALY","COSTS"),times = input$treatments_n),
+      rep(c(1:input$treatments_n),each=2)
+      )
     
     res_df = c() # value
     
     # t_names = grep("treatment_name_",names(input),value = T)
     t_names = unlist(lapply(paste0("treatment_name_",1:input$treatments_n),
                             function(x)input[[x]]))
+    t_names = rep(t_names,each=2)
     
-    
-    for(q in 1:input$treatments_n){ # loop through treatments
-      
-      txt_q = input[[res_Q_inputs[q]]] 
-      txt_t = input[[res_T_inputs[q]]]
-      
-      # QALYS
-      if(nchar(txt_q)>1){
-        res_q.temp = read.table(text = txt_q,sep = " ",fill=T)
-        if(!is.null(res_q.temp$V1)){
-          res_df <- cbind(res_df,res_q.temp[,1])
-          colnames(res_df)[ncol(res_df)] <- paste0(t_names[q]," QALYs")
-        } 
-      }
-      
-      # COSTS
-      if(nchar(txt_t)>1){
-        res_t.temp = read.table(text = txt_t,sep = " ",fill=T)
-        if(!is.null(res_t.temp$V1)){
-          res_df <- cbind(res_df,res_t.temp[,1]) 
-          colnames(res_df)[ncol(res_df)] <- paste0(t_names[q]," Costs")
+    for(q in seq_along(resinputs)){ # loop through treatments
+      txt = input[[resinputs[q]]] 
+      if(nchar(txt)>1){
+        res.temp = read.table(text = txt,sep = " ",fill=T)
+        if(!is.null(res.temp$V1)){
+          res_df <- cbind(res_df,res.temp[,1]) 
+          colnames(res_df)[ncol(res_df)] <- paste0(t_names[q])
         }
       } 
     } # end loop
@@ -153,10 +166,34 @@ server <- function(input, output, session){
   
   
   output$input_data_ui <- renderUI({
+    # RESET BUTTON
+    x <- (input$reset) # print just to re-evaluate this function
     fluidRow(
       gen_treatment_name_fields(input$treatments_n)
     )
   })
+  
+  
+  step12 = reactiveVal(1)
+  observeEvent(input$load_sample_data,ignoreInit = T,ignoreNULL = T,{
+    updateSelectInput(session,inputId = "treatments_n",selected = 2) # hack to have treatments_n being updated no matter what the current states
+    updateSelectInput(session,inputId = "treatments_n",selected = 3)
+    step12(2) # hack to have one ui element being updated before the other
+  })
+  
+  observeEvent(input$treatments_n,{ # waits until treatments_n is updated
+    if(isolate(step12())==2){ # checks if it is supposed to put in new values
+      lapply(1:3,function(x){
+        updateTextInput(session,paste0("treatment_name_",x),value = sample_names[x])
+        updateTextAreaInput(session, paste0("QALY",x),value= paste(sample_qalys[,x],collapse ="\n"))
+        updateTextAreaInput(session, paste0("COSTS",x),value=paste(sample_cost[,x],collapse ="\n"))
+      })
+      step12(1)
+    } 
+    
+    
+  })
+  
   
   
   action_monitor = reactive({
@@ -165,33 +202,16 @@ server <- function(input, output, session){
   
   
   
-  observeEvent(action_monitor(),{
+  observeEvent(action_monitor(),ignoreInit = T,{
     
     
     # retrive names, qalys, and costs from text fields
-    treatment_names = unlist(lapply(paste0("treatment_name_",1:input$treatments_n),
+    
+    n = input$treatments_n
+    if(!is.null(n)){
+    treatment_names = unlist(lapply(
+      paste0("treatment_name_",1:input$treatments_n),
                                     function(x)input[[x]]))
-    
-    
-    getValues = function(treatment_names,type="QALY",rm1=F){
-      res_Q_inputs = paste0(type,seq_along(treatment_names))
-      res = c()
-      for(q in res_Q_inputs){
-        txt = input[[q]]
-        if(is.null(txt)){
-          print("Empty input")
-          return(NULL)
-        }
-        res.temp = read.table(text = txt,sep = " ",fill=T)
-        res <- cbind(res,as.numeric(res.temp[,1]))
-      }
-      if(rm1){
-        res = res[-1,]
-      }
-      colnames(res) = treatment_names
-      res = res[complete.cases(res),]
-      return(res)
-    }
     
     
     qalys = getValues(treatment_names = treatment_names,
@@ -218,16 +238,16 @@ server <- function(input, output, session){
     if(input$plotChoice == "CEAC"){
       output$results_plot <- renderPlot({
         makeCEAC(
-          total_costs = qalys,
-          total_qalys = costs,
+          total_costs = costs,
+          total_qalys = qalys,
           treatment = treatment_names
           )
       })
     }
 
     # always create tbl
-      output$results_tbl <- renderTable({
-        head(qalys)
+      output$results_tbl <- renderDataTable({
+        createICERtable(total_costs = costs,total_qalys = qalys)
       })
       
       # hide/show depending on selection
@@ -238,7 +258,7 @@ server <- function(input, output, session){
         hide("results_plot")
         show("results_tbl")
       }
-      
+    }
 
   })
   

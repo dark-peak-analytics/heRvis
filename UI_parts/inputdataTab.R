@@ -11,6 +11,8 @@ inputdataTab <- tabPanel("Input data",
                                      choices = c(2:6)
                                    ),
                                    checkboxInput("remove_1st_row",label = "Does the 1st row contain labels?"),
+                                   actionButton("reset","Reset all fields"),
+                                   actionButton("load_sample_data","Load sample data")
                                ),
                                br(),br(),
                              ),
@@ -26,7 +28,7 @@ inputdataTab <- tabPanel("Input data",
                                ),
                                br(),
                                column(offset = 1,width = 10,align="center",
-                                      tableOutput("validate_q1")
+                                      panel(tableOutput("validate_q1"))
                                       )
                                )
                              )

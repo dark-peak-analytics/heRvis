@@ -2,13 +2,13 @@ outputTab <- tabPanel("Output",
                       
                       # add choice of plot
                       radioGroupButtons(choices = c("CEAC","CEPlane","ICER-Table"),
-                                        selected = "CEAC",
+                                        selected = "CEPlane",
                                         label = "Choice",
                                         inputId = "plotChoice"),
                       
                       
                       plotOutput(outputId = "results_plot"),
-                      tableOutput(outputId = "results_tbl")
+                      dataTableOutput(outputId = "results_tbl")
                         
                         
                       )

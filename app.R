@@ -33,6 +33,9 @@ source("./UI_parts/inputdataTab.R")
 source("./UI_parts/outputTab.R")
 source("./UI_parts/aboutTab.R")
 source("./UI_parts/header.R")
+source("./UI_parts/instructModal.R")
+source("./UI_parts/showDataModal.R")
+
 
 
 sample_cost = darkpeak::example_TC[,2:4]
@@ -48,7 +51,6 @@ ui <- navbarPage(title = "heRvis",
                  introTab,
                  inputdataTab,
                  outputTab,
-                 aboutTab,
                  useShinyjs(),
                  footer = footer 
                  )
@@ -56,6 +58,15 @@ ui <- navbarPage(title = "heRvis",
 
 
 server <- function(input, output, session){
+  
+  observeEvent(input$showInstruct, {
+    showModal(instructModal)
+  })
+  
+  observeEvent(input$showDataModal, {
+    showModal(showDataModal)
+  })
+  
   
   # this needs to be read in HERE in the server
   getValues = function(treatment_names,type="QALY",rm1=F,add_label =""){

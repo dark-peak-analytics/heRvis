@@ -1,4 +1,4 @@
-outputTab <- tabPanel("Output",
+outputTab <- tabPanel("Customise & Download",
                       
                       # add choice of plot
                       radioGroupButtons(choices = c("CEAC","CEPlane","ICER-Table"),

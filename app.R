@@ -238,6 +238,7 @@ server <- function(input, output, session){
     
     # create plot output
       if (input$plotChoice == "CEPlane") {
+        
         output$results_plot <- renderPlot({
           makeCEPlane(
             total_costs = costs,
@@ -246,6 +247,19 @@ server <- function(input, output, session){
             treatment = treatment_names[-which(treatment_names == input$ref_index)]
           )
         })
+        
+        output$downloadPlot <- downloadHandler(
+          filename = function(){paste("CEplane",'.png',sep='')},
+          content = function(file){
+            ggsave(filename = file,
+                   plot= makeCEPlane(
+                     total_costs = costs,
+                     total_qalys = qalys,
+                     comparitor = input$ref_index,
+                     treatment = treatment_names[-which(treatment_names == input$ref_index)]
+                   ))
+          }
+        )
       }
 
       if (input$plotChoice == "CEAC") {
@@ -256,6 +270,18 @@ server <- function(input, output, session){
             treatment = treatment_names
           )
         })
+        
+        output$downloadPlot <- downloadHandler(
+          filename = function(){paste("CEAC",'.png',sep='')},
+          content = function(file){
+            ggsave(filename = file,
+                   plot= makeCEAC(
+                     total_costs = costs,
+                     total_qalys = qalys,
+                     treatment = treatment_names
+                   ))
+          }
+        )
       }
 
       # always create tbl
@@ -271,18 +297,13 @@ server <- function(input, output, session){
       if (input$plotChoice == "CEAC" | input$plotChoice == "CEPlane") {
         hide("results_tbl")
         show("results_plot")
+        show("downloadPlot")
       } else {
         hide("results_plot")
         show("results_tbl")
+        hide("downloadPlot")
       }
-    #  }  selse {
-    #   output$results_plot <- renderPlot({
-    #     ggplot()
-    #   })
-    #   output$results_tbl <- renderDataTable({
-    #     "No Data"
-    #   })
-    # } 
+ 
     }
 
     

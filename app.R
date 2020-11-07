@@ -35,8 +35,7 @@ source("./UI_parts/aboutTab.R")
 source("./UI_parts/header.R")
 source("./UI_parts/instructModal.R")
 source("./UI_parts/showDataModal.R")
-
-
+source("./UI_parts/showStabilityModal.R")
 
 sample_cost = darkpeak::example_TC[,c(3,2,4)]
 sample_qalys = darkpeak::example_TQ[,c(3,2,4)]
@@ -67,6 +66,9 @@ server <- function(input, output, session){
     showModal(showDataModal(input))
   })
   
+  observeEvent(input$showStabilityModal, {
+    showModal(showStabilityModal)   # R.S. Add input
+  })
   
   # this needs to be read in HERE in the server
   getValues = function(treatment_names,type="QALY",rm1=F,add_label ="")
@@ -96,19 +98,22 @@ server <- function(input, output, session){
 
 
   observeEvent(
-    lapply(paste0("treatment_name_", 1:input$treatments_n), function(x) input[[x]]),
+    lapply(paste0("treatment_name_", 1:input$treatments_n), 
+           function(x) input[[x]]),
     {
-      choices = lapply(paste0("treatment_name_", 1:input$treatments_n), function(x) input[[x]])
+      choices = lapply(paste0("treatment_name_", 1:input$treatments_n), 
+                       function(x) input[[x]])
       if(!is.null(choices)){
         choices = unlist(choices)
-      updateSelectInput(session, "ref_index",choices = choices,selected = choices[1])
+      updateSelectInput(session, "ref_index",
+                        choices = choices,
+                        selected = choices[1])
       }
       
     }
   )
   
-  
-  
+
   output$validate_q1 <- renderTable(rownames=T,{
     
     resinputs = paste0(
@@ -188,8 +193,7 @@ server <- function(input, output, session){
     
   })
   
-  
-  
+
   action_monitor = reactive({
     c(input$main_panel ,input$plotChoice)
   })
@@ -212,18 +216,26 @@ server <- function(input, output, session){
     
     qalys = getValues(treatment_names = treatment_names,
                       type = "QALY",
-                      rm1 = input$remove_1st_row
-    )
+                      rm1 = input$remove_1st_row)
     
     costs = getValues(treatment_names = treatment_names,
                       type = "COSTS",
-                      rm1 = input$remove_1st_row
-    )
+                      rm1 = input$remove_1st_row)
     
+    # create Stability plot output
+    output$stabilityPlot <- renderPlot({
+      
+      checkStability(
+        total_costs = example_TC,
+        total_qalys = example_TQ,
+        withinShiny = T)
+      
+    })
+  
     
     # if (ncol(qalys) >= 2 & ncol(costs) >= 2) {
-
-      # create plot output
+    
+    # create plot output
       if (input$plotChoice == "CEPlane") {
         output$results_plot <- renderPlot({
           makeCEPlane(

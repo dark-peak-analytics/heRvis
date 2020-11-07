@@ -13,17 +13,19 @@ instructModal <- modalDialog(
   tags$ol(
     tags$li("Input the names of the treatments"), 
     tags$li("Paste in total costs & total QALYs"), 
-    tags$li("Check the first 5 and last 5 rows")
+    tags$li("Check the first 5 and last 5 rows"),
+    tags$li("Check the results are stable")
+    
   )
-),column(width = 4,
-         offset = 1,
+),column(width = 5,
+         offset = 0,
          align="center",
          br(),
          img(
-           src = "RotatingGif.gif",
+           src = "inputData.gif",
            align = "center",
-           height = '70px',
-           width = '70px'
+           height = '250px',
+           width = '250px'
          ),
          br()
 )),
@@ -36,18 +38,18 @@ fluidRow(column(
   h4("Step 2: Customise & download"),
   tags$ol(
     tags$li("Select a plot or table"),
-    tags$li("Choose treatments and customise aesthetics"),
-    tags$li("Download the visual in the required format")
+    tags$li("Choose strategies and customise aesthetics"),
+    tags$li("Download the visual")
   ),
-),column(width = 4,
-         offset = 1,
+),column(width = 5,
+         offset = 0,
          align="center",
          br(),
          img(
-           src = "RotatingGif.gif",
+           src = "makingplots.gif",
            align = "center",
-           height = '70px',
-           width = '70px'
+           height = '250px',
+           width = '250px'
          ),
          br())),
 
@@ -59,14 +61,14 @@ fluidRow(column(
   offset = 1,
   width = 6,
   h4("Step 3: Get a coffee")
-),column(width = 4,
-         offset = 1,
+),column(width = 5,
+         offset = 0,
          align="center",
          img(
-           src = "RotatingGif.gif",
+           src = "coffee.gif",
            align = "center",
-           height = '70px',
-           width = '70px'
+           height = '250px',
+           width = '250px'
          ))),
 
 fluidRow(style = "padding-top:100px")

@@ -17,7 +17,9 @@ outputTab <- tabPanel("Output",
                           hr(),
 
 
-                          plotOutput(outputId = "results_plot", height = "500px",width = "100%"),
+                          plotOutput(outputId = "results_plot",
+                                     height = "500px",
+                                     width = "100%"),
                           dataTableOutput(outputId = "results_tbl"),
                           br(),br(),br()
                       )

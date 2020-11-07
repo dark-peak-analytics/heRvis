@@ -195,7 +195,7 @@ server <- function(input, output, session){
   
 
   action_monitor = reactive({
-    c(input$main_panel ,input$plotChoice)
+    c(input$main_panel, input$plotChoice, input$showStabilityModal)
   })
   
   
@@ -223,11 +223,12 @@ server <- function(input, output, session){
                       rm1 = input$remove_1st_row)
     
     # create Stability plot output
+
     output$stabilityPlot <- renderPlot({
       
       checkStability(
-        total_costs = example_TC,
-        total_qalys = example_TQ,
+        total_costs = as.matrix(costs),
+        total_qalys = as.matrix(qalys),
         withinShiny = T)
       
     })

@@ -13,18 +13,20 @@ rm(list = ls())
 
 # get the following functions from the library
 library(ggplot2)
-library(darkpeak) # note may need to install from github
 library(shiny) 
 library(shinyWidgets) 
 library(dampack)
 library(shinyjs)
 library(DT)
+library(data.table)
 
 # source functions
 source("./R/gen_treatment_name_fields.R")
 source("./R/ceac.R")
 source("./R/cep.R")
 source("./R/icertbl.R")
+source("./R/checkStability.R")
+
 
 # source the UI components
 source("./UI_parts/footer.R")

@@ -39,7 +39,7 @@ source("./UI_parts/showStabilityModal.R")
 
 sample_cost = darkpeak::example_TC[,c(3,2,4)]
 sample_qalys = darkpeak::example_TQ[,c(3,2,4)]
-sample_names = c("Standard of Care", "Dupimap","Supimap")
+sample_names = c("Base Case", "Dupimap","Supimap")
 
 
 
@@ -295,13 +295,17 @@ server <- function(input, output, session){
 
       # hide/show depending on selection
       if (input$plotChoice == "CEAC" | input$plotChoice == "CEPlane") {
+        
         hide("results_tbl")
         show("results_plot")
         show("downloadPlot")
+        
       } else {
+        
         hide("results_plot")
         show("results_tbl")
         hide("downloadPlot")
+        
       }
  
     }

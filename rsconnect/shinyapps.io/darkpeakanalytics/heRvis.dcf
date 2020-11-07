@@ -1,0 +1,13 @@
+name: heRvis
+title: heRvis
+username:
+account: darkpeakanalytics
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 3185404
+bundleId: 3831919
+url: https://darkpeakanalytics.shinyapps.io/heRvis/
+when: 1604770975.84105
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: deprecated

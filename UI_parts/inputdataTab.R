@@ -38,7 +38,12 @@ inputdataTab <- tabPanel(
           offset = 1,
           width = 10,
           align = "center",
-          actionButton("showDataModal", "Show Table", icon = icon("table")))),
+          actionButton(inputId = "showDataModal",
+                       label =  "Show Table", 
+                       icon = icon("table")),
+          actionButton(inputId = "showStabilityModal",
+                       label =  "Show Stability Plot", 
+                       icon = icon("area-chart")))),
         
       fluidRow(
         column(

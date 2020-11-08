@@ -228,7 +228,7 @@ server <- function(input, output, session){
 
     output$stabilityPlot <- renderPlot({
       
-      checkStability(
+      checkStability(lambda = input$lambda,
         total_costs = as.matrix(costs),
         total_qalys = as.matrix(qalys),
         withinShiny = T)
@@ -251,10 +251,11 @@ server <- function(input, output, session){
         })
         
         output$downloadPlot <- downloadHandler(
-          filename = function(){paste("CEplane",'.png',sep='')},
+          filename = function(){paste("heRvis_CEplane",'.png',sep='')},
           content = function(file){
             ggsave(filename = file,
                    plot= makeCEPlane(
+                     thresh = input$lambda,
                      total_costs = costs,
                      total_qalys = qalys,
                      comparitor = input$ref_index,
@@ -274,7 +275,7 @@ server <- function(input, output, session){
         })
         
         output$downloadPlot <- downloadHandler(
-          filename = function(){paste("CEAC",'.png',sep='')},
+          filename = function(){paste("heRvis_CEAC",'.png',sep='')},
           content = function(file){
             ggsave(filename = file,
                    plot= makeCEAC(

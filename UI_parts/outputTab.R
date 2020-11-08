@@ -1,4 +1,4 @@
-outputTab <- tabPanel("Output",
+outputTab <- tabPanel("Outputs",
                       
                       # add choice of plot
                       panel(

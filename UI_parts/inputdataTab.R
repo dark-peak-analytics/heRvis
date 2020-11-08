@@ -20,6 +20,7 @@ inputdataTab <- tabPanel(
             label = "How many treatments?",
             choices = c(2:6)
           ),
+          numericInput("lambda",label = "Lambda",value = 30000,min = 0,max = 200000),
           checkboxInput("remove_1st_row", label = "The 1st row contains labels"),
           actionButton("reset", "Reset all fields"),
           actionButton("load_sample_data", "Load example data")

@@ -6,7 +6,7 @@
 #  Copyright (c) Dark Peak Analytics 2020
 #  Email: darkpeakanalytics@gmail.com
 #  ---------------------------
-#  Notes:  relies on darkpeak package functions                    
+#  Notes:  Uses custom function not darkpeak functions                    
 #  ---------------------------
 
 rm(list = ls())

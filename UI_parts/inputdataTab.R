@@ -20,9 +20,9 @@ inputdataTab <- tabPanel(
             label = "How many treatments?",
             choices = c(2:6)
           ),
-          checkboxInput("remove_1st_row", label = "Does the 1st row contain labels?"),
+          checkboxInput("remove_1st_row", label = "The 1st row contains labels"),
           actionButton("reset", "Reset all fields"),
-          actionButton("load_sample_data", "Load sample data")
+          actionButton("load_sample_data", "Load example data")
         ),
         br(),
         br(),

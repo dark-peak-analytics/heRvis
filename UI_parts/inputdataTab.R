@@ -5,7 +5,10 @@ inputdataTab <- tabPanel(
     column(
       offset  = 10,
       width = 2,
-      actionButton(inputId = "showInstruct",label =  icon(name ="info-circle"))
+      # action button custom icon with green.
+      actionButton(inputId = "showInstruct",
+                   label =  icon(name ="info-circle","fa-2x"),
+                   style="color: #fff; background-color: #008000; border-color: #008000")
     )),
     
     fluidRow(

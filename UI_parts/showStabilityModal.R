@@ -17,9 +17,11 @@ showStabilityModal <- #function() {
       column(offset = 1,
              width = 10,
              align = "center",
+             shinycssloaders::withSpinner(
              plotOutput(outputId = "stabilityPlot", 
                         height = "400px",
                         width = "100%")
+             )
              
              )))
   #}

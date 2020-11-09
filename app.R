@@ -72,6 +72,35 @@ server <- function(input, output, session){
     showModal(showStabilityModal)   # R.S. Add input
   })
   
+  
+  observeEvent(input$instructGifChoice,{
+    if(input$instructGifChoice == "Step 1"){
+  output$instructionGif <- renderImage({
+    list(src = "www/inputData.gif",
+         align = "center",
+         height = '400px',
+         width = '400px')
+  },
+  deleteFile = F)
+  }else if(input$instructGifChoice == "Step 2"){
+    output$instructionGif <- renderImage({
+      list(src = "www/makingplots.gif",
+           align = "center",
+           height = '400px',
+           width = '400px')
+    },
+    deleteFile = F)
+  }else{
+    output$instructionGif <- renderImage({
+      list(src = "www/coffee.gif",
+           align = "center",
+           height = '400px',
+           width = '400px')
+    },
+    deleteFile = F)
+  }
+  }) # end observe event
+  
   # this needs to be read in HERE in the server
   getValues = function(treatment_names,type="QALY",rm1=F,add_label ="")
   {

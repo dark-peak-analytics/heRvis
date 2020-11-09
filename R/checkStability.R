@@ -49,7 +49,7 @@ checkStability <- function(total_costs = example_TC,
   
   if(withinShiny){
     
-    withProgress(message = 'Making plot',
+    withProgress(message = 'Running Simulations',
                  value = 0, {
                    # Run user specified number of times
                    
@@ -125,6 +125,9 @@ checkStability <- function(total_costs = example_TC,
   
   #=== PLOT FACET =================================#
   
+  withProgress(message = 'Making plot',
+               value = 0, {
+  
   ggplot2::ggplot(data = dt_BSresults,
                   mapping = ggplot2::aes(x = `Number of PSA`,
                                          y = `Mean Cost/QALYs`,
@@ -138,5 +141,7 @@ checkStability <- function(total_costs = example_TC,
     ggplot2::facet_wrap(~Metric,
                         nrow = 1,
                         scales =  "free_y")  # facet split
+                 
+               }) # close withprogress
   
 }

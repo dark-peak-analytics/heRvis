@@ -20,7 +20,7 @@ inputdataTab <- tabPanel(
           class = "panel1",
           selectizeInput(
             inputId = "treatments_n",
-            label = "How many treatments?",
+            label = "How many strategies?",
             choices = c(2:6)
           ),
           numericInput("lambda",label = "Lambda",value = 30000,min = 0,max = 200000),
@@ -48,21 +48,5 @@ inputdataTab <- tabPanel(
           actionButton(inputId = "showStabilityModal",
                        label =  "Show Stability Plot", 
                        icon = icon("area-chart"))))
-        
-      #fluidRow(
-      #  column(
-      #    offset = 1,
-      #    width = 10,
-      #    align = "center",
-      #    h4("Check the first and last 5 rows - looks ok?")
-      #  ),
-      #  br(),
-      #  column(
-      #    offset = 1,
-      #    width = 10,
-      #    align = "center",
-      #    panel(tableOutput("validate_q1"))
-      #  )
-      #)
-    )
+        )
                          )

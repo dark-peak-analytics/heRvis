@@ -17,11 +17,15 @@ outputTab <- tabPanel("Outputs",
                           hr(),br(),br(),br(),
 
 
-                          plotOutput(outputId = "results_plot",
+                          shinycssloaders::withSpinner(
+                            plotOutput(outputId = "results_plot",
                                      height = "500px",
-                                     width = "100%"),
+                                     width = "100%")
+                            ),
                           
-                          dataTableOutput(outputId = "results_tbl"),
+                          shinycssloaders::withSpinner(
+                            dataTableOutput(outputId = "results_tbl")
+                            ),
                           
                           br(),br(),br(),br(),
                           

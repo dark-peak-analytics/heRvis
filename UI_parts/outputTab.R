@@ -18,12 +18,16 @@ outputTab <- tabPanel("Outputs",
 
 
                           shinycssloaders::withSpinner(
+                            custom.css = T,
+                            image = "RotatingGif.gif",
                             plotOutput(outputId = "results_plot",
                                      height = "500px",
                                      width = "100%")
                             ),
                           
                           shinycssloaders::withSpinner(
+                            custom.css = T,
+                            image = "RotatingGif.gif",
                             dataTableOutput(outputId = "results_tbl")
                             ),
                           

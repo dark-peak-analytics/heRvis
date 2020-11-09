@@ -18,6 +18,12 @@ checkStability <- function(total_costs = example_TC,
   # test the number of columns are equal in cost and qaly matrices.
   testthat::expect_equal(ncol(total_costs),ncol(total_qalys))
   
+  # return an empty data-set if there is no data.
+  if(ncol(total_costs)<2 | ncol(total_qalys)<2){
+    return(noDataPlot())
+    }
+
+  
   #=== NET BENEFIT ===========================#
   
   NB = total_qalys * lambda - total_costs

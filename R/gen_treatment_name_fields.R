@@ -5,8 +5,8 @@ gen_treatment_name_fields = function(n){
   for(i in 1:n){
     name_i = textInput(
       inputId = paste0("treatment_name_",i),
-      label = paste0("Name of Treatment ",i),
-      value = paste0("Treatment ",i)
+      label = paste0("Name of Strategy ",i),
+      value = paste0("Strategy ",i)
     )
     q_field_i = textAreaInput(
       inputId = paste0("QALY",i),
@@ -21,14 +21,14 @@ gen_treatment_name_fields = function(n){
     col_i = column(
       width = floor(12/as.numeric(n)),
       panel(
-        name_i,
+        name_i,align="center",
         column(12,align="center",h4("Copy-paste")),
         br(),
-        column(6,q_field_i,
+        column(6,q_field_i,align="center",
                style="padding-left:0;margin-left:-5px;padding-right:0;margin-right:-5px"
         ),
         column(6,
-               t_field_i,
+               t_field_i,align="center",
                style="padding-left:0;margin-left:-5px;padding-right:0;margin-right:-5px"
         )
       )

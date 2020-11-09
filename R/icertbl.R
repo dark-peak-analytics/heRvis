@@ -3,12 +3,9 @@ createICERtable = function (total_costs = example_TC, total_qalys = example_TQ,
                             ref_index = 1, ci = T) 
 {
 
-if(ncol(total_costs)<2){
-  return(DT::datatable(data = data.frame("NO DATA"))
-)
-}
-if(ncol(total_qalys)<2){
-return(DT::datatable(data = data.frame("NO DATA"="")))
+# return an empty data-set if there is no data.
+if(ncol(total_costs)<2 | ncol(total_qalys)<2){
+  return(DT::datatable(data = data.frame("NO DATA")))
 }
 
 ref_index = which(colnames(total_costs) == ref_index)

@@ -5,8 +5,8 @@ account: darkpeakanalytics
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 3185404
-bundleId: 3833792
+bundleId: 3837287
 url: https://darkpeakanalytics.shinyapps.io/heRvis/
-when: 1604832734.58
+when: 1604922040.09462
 asMultiple: FALSE
 asStatic: FALSE

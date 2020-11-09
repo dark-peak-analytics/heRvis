@@ -11,9 +11,11 @@ showStabilityModal <- modalDialog(
              width = 10,
              align = "center",
              shinycssloaders::withSpinner(
-             plotOutput(outputId = "stabilityPlot", 
-                        height = "400px",
-                        width = "100%")
+               custom.css = T,
+               image = "RotatingGif.gif",
+               plotOutput(outputId = "stabilityPlot",
+                          height = "400px",
+                          width = "100%")
              )
              
              )))

@@ -12,6 +12,8 @@
 rm(list = ls())
 
 # get the following functions from the library
+library(plotly)
+library(scales)
 library(ggplot2)
 library(shiny)
 library(shinyWidgets)
@@ -301,7 +303,7 @@ server <- function(input, output, session){
     # create plot output
       if (input$plotChoice == "CEPlane") {
 
-        output$results_plot <- renderPlot({
+        output$results_plot <- renderPlotly({
           makeCEPlane(
             total_costs = costs,
             total_qalys = qalys,
@@ -329,7 +331,7 @@ server <- function(input, output, session){
       }
 
       if (input$plotChoice == "CEAC") {
-        output$results_plot <- renderPlot({
+        output$results_plot <- renderPlotly({
           makeCEAC(
             total_costs = costs,
             total_qalys = qalys,

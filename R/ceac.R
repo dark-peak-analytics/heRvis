@@ -24,7 +24,7 @@ makeCEAC = function (total_costs = example_TC, total_qalys = example_TQ, colors 
             value = apply(nb, 1, mean))
         df_CEAC = rbind(df_CEAC, nb)
     }
-    ggplot2::ggplot(data = df_CEAC, ggplot2::aes(x = lambda, 
+    plot <- ggplot2::ggplot(data = df_CEAC, ggplot2::aes(x = lambda, 
         y = value, col = Intervention)) + ggplot2::theme_minimal() + 
         ggplot2::theme(legend.position = "top", legend.text = ggplot2::element_text(size = 11), 
             legend.title = ggplot2::element_text(size = 11), 
@@ -42,4 +42,6 @@ makeCEAC = function (total_costs = example_TC, total_qalys = example_TQ, colors 
                   axis.text.y = element_text(size = 14),
                   title = element_text(size = 14)
                 )
+    
+    return(ggplotly(plot))
 }

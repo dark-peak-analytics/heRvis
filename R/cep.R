@@ -87,5 +87,5 @@ makeCEPlane = function (total_costs = example_TC, total_qalys = example_TQ,
             
   }
   # ce_plane_plot
-  return(ggplotly(ce_plane_plot))
+  return(ce_plane_plot)
 }

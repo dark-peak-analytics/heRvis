@@ -291,10 +291,13 @@ server <- function(input, output, session){
 
     output$stabilityPlot <- renderPlot({
 
-      checkStability(lambda = input$lambda,
+      checkStability(
+        colors = colors,
+        lambda = input$lambda,
         total_costs = as.matrix(costs),
         total_qalys = as.matrix(qalys),
-        withinShiny = T)
+        withinShiny = T
+      )
 
     })
 
@@ -304,7 +307,7 @@ server <- function(input, output, session){
     # create plot output
       if (input$plotChoice == "CEPlane") {
 
-        output$results_plot <- renderPlotly({
+        output$results_plot <- renderPlot({
           makeCEPlane(
             total_costs = costs,
             total_qalys = qalys,
@@ -332,7 +335,7 @@ server <- function(input, output, session){
       }
 
       if (input$plotChoice == "CEAC") {
-        output$results_plot <- renderPlotly({
+        output$results_plot <- renderPlot({
           makeCEAC(
             total_costs = costs,
             total_qalys = qalys,

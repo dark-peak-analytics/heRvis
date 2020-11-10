@@ -43,5 +43,5 @@ makeCEAC = function (total_costs = example_TC, total_qalys = example_TQ, colors 
                   title = element_text(size = 14)
                 )
     
-    return(ggplotly(plot))
+    return(plot)
 }

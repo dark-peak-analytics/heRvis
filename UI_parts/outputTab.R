@@ -26,7 +26,7 @@ outputTab <- tabPanel(
             column(
             width = 12, hr(), align = "center",
                 # sidebarLayout(sidebarPanel = sidebarPanel(width = 2),mainPanel = mainPanel(
-                    plotlyOutput(
+                    plotOutput(
                             outputId = "results_plot",
                             height = "500px",
                             width = "100%"

@@ -1,7 +1,7 @@
 # showStability
 
 showStabilityModal <- modalDialog(
-    title = "Check whether results are stable ... ",
+    title = div(style="color:white; font-size:120%; font-weight:500", "Check whether results are stable ... "),
     size = "l",
     easyClose = F,
     

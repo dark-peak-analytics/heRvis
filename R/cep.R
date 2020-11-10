@@ -1,7 +1,8 @@
 # cep
 
 makeCEPlane = function (total_costs = example_TC, total_qalys = example_TQ, 
-                        comparitor = "notreat", treatment = "treat 1", thresh = 30000, 
+                        comparitor = "notreat", treatment = "treat 1", thresh = 30000,
+                        colors = NULL, 
                         show_ellipse = F) 
 {
 
@@ -9,6 +10,7 @@ makeCEPlane = function (total_costs = example_TC, total_qalys = example_TQ,
   if(ncol(total_costs)<2 | ncol(total_qalys)<2){
     return(noDataPlot())
   }
+
 
   ce_plane_plot = ggplot2::ggplot() + ggplot2::geom_vline(xintercept = 0) + 
     ggplot2::geom_hline(yintercept = 0) + ggplot2::theme_minimal() + 
@@ -21,11 +23,15 @@ makeCEPlane = function (total_costs = example_TC, total_qalys = example_TQ,
   if (!is.null(treatment)) {
     TQ = total_qalys
     TC = total_costs
-    legend_colors = c("#1B9E77", "#D95F02", "#7570B3", "#E7298A", 
-                      "#5f9ea0", "gray")
-    names(legend_colors) = c(paste("treat", 1:5), "notreat")
-    legend_colors = legend_colors[names(legend_colors) %in% 
-                                    treatment]
+    
+    
+      legend_colors = if(!is.null(colors)){colors} else {rainbow(n = ncol(total_costs))}
+      names(legend_colors) = colnames(total_costs)
+      legend_colors = legend_colors[names(legend_colors) %in% treatment]
+
+
+    
+    
     incr_C <- data.frame(TC[, treatment] - TC[, comparitor])
     names(incr_C) = treatment
     incr_Q <- data.frame(TQ[, treatment] - TQ[, comparitor])
@@ -39,24 +45,46 @@ makeCEPlane = function (total_costs = example_TC, total_qalys = example_TQ,
                             mean)
     incr_means = merge(incr_mean_Q, incr_mean_C, by = "Treatment")
     if (show_ellipse) {
-      ce_plane_plot = ce_plane_plot + ggplot2::stat_ellipse(data = incr_long[!(incr_long$Treatment %in% 
-                                                                                 comparitor), ], ggplot2::aes(x = incr_Q, y = incr_C, 
-                                                                                                              col = Treatment), type = "norm", level = 0.9, 
-                                                            segments = 50)
+      ce_plane_plot = ce_plane_plot + 
+        stat_ellipse(
+          data = incr_long[!(incr_long$Treatment %in% comparitor), ], 
+          aes(x = incr_Q, y = incr_C, col = Treatment), 
+          type = "norm", level = 0.9, segments = 50)
     }
-    ce_plane_plot = ce_plane_plot + ggplot2::geom_point(data = incr_long, 
-                                                        ggplot2::aes(x = incr_Q, y = incr_C, col = Treatment), 
-                                                        alpha = 0.5, size = 0.7) + ggplot2::geom_point(data = incr_means, 
-                                                                                                       ggplot2::aes(x = incr_Q, y = incr_C, fill = Treatment), 
-                                                                                                       col = "black", size = 3, pch = 21) + ggplot2::coord_cartesian(xlim = c(-quantile(abs(incr_long$incr_Q), 
-                                                                                                                                                                                        0.99), quantile(abs(incr_long$incr_Q), 0.99)), ylim = c(-quantile(abs(incr_long$incr_C), 
-                                                                                                                                                                                                                                                          0.99), quantile(abs(incr_long$incr_C), 0.99)))# + 
-      # ggplot2::scale_fill_manual(name = NULL, values = legend_colors, 
-      #                            guide = F) + ggplot2::guides(color = ggplot2::guide_legend(override.aes = list(size = 4, 
-      #                                                                                                           linetype = F, alpha = 1))) + ggplot2::scale_color_manual(name = paste(comparitor, 
-      #                                                                                                                                                                                 "vs."), values = legend_colors) + ggplot2::theme(legend.position = "top", 
-      #                                                                                                                                                                                                                                  legend.text = ggplot2::element_text(size = 11), legend.title = ggplot2::element_text(size = 11), 
-      #                                                                                                                                                                                                                                  title = ggplot2::element_text(size = 11))
+    
+    ce_plane_plot = ce_plane_plot + 
+      geom_point(
+        data = incr_long, 
+        aes(x = incr_Q, y = incr_C, col = Treatment), 
+        alpha = 0.5, size = 0.7) + 
+          
+          geom_point(
+            data = incr_means, 
+            aes(x = incr_Q, y = incr_C, fill = Treatment), 
+            col = "black", size = 3, pch = 21) + 
+            scale_y_continuous(labels=comma) +
+            coord_cartesian(xlim = c(-quantile(abs(incr_long$incr_Q), 0.99), quantile(abs(incr_long$incr_Q), 0.99)), ylim = c(-quantile(abs(incr_long$incr_C), 0.99), quantile(abs(incr_long$incr_C), 0.99)))
+
+            if (!is.null(legend_colors)) {
+              ce_plane_plot = ce_plane_plot +
+
+                scale_fill_manual(name = NULL, values = legend_colors, guide = F) +
+                guides(color = guide_legend(override.aes = list(size = 4, linetype = F, alpha = 1))) +
+                scale_color_manual(
+                  name = paste(comparitor, "vs."),
+                  values = legend_colors
+                ) +
+
+                theme(
+                  legend.position = "top",
+                  legend.text = element_text(size = 14),
+                  legend.title = element_text(size = 14),
+                  axis.text.x = element_text(size = 14),
+                  axis.text.y = element_text(size = 14),
+                  title = element_text(size = 14)
+                )
+            }
+            
   }
   # ce_plane_plot
   return(ce_plane_plot)

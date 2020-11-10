@@ -1,0 +1,87 @@
+@import url('https://rsms.me/inter/inter.css');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100&display=swap');
+@import url('https://rsms.me/inter/inter.css');
+html { font-family: 'Inter'; }
+
+#main_panel{color:magenta}
+
+
+body {
+    background-color: white;
+    color: #26384E;
+    font-weight: 400;
+    font-family: Inter;
+    font-size: 16px;
+    letter-spacing: 0;
+    line-height: 24px;
+    margin-bottom: 150px;
+  }
+
+  .panel {
+  background-color: white;
+  /*border: 1px solid #5F9EA0;*/
+  border: 0;
+  border-radius: 10px;
+  padding:20px;
+  padding-right:40 px;
+  padding-left:40 px;
+  box-shadow: 0 8px 30px 0 rgba(0,0,0,0.1);
+  }
+.header .active {
+    background-color: #fc0 !important;
+    color: #blue !important;
+}
+.navbar-default .navbar-brand{color: magenta;}
+.tab{color: red}
+.navbar-default .navbar-nav>li>a:focus, .navbar-default .navbar-nav>li>a:hover,  .navbar-default .navbar-nav > .active > a {
+    color: magenta !important;
+}
+
+#prv, #nxt {
+    color: magenta;
+    border-color: magenta;
+    background-color: white;
+    background-image: none;
+    box-shadow: 0 8px 30px 0 rgba(0,0,0,0.1);
+    border-radius: 30px;
+    padding:15px;
+}
+
+.colourpicker-input-container{
+    width: 100%;
+}
+#show_95ci{background-color: magenta;}
+
+  .footer {
+  position:fixed;
+  bottom:0px;
+  right:0px;
+  left:0px;
+  height:90px;
+  background-color: white;
+  margin-top:0px;
+  padding-top:15px;
+  opacity: 0.9;
+  padding-left:40px;
+  margin-bottom:0px;
+  border-top: 1px solid;
+  height: 100px;
+  }
+  a {color: magenta}
+  /*.active {color:darkorange}*/
+  .card {
+    width: 100%;
+    height:400px;
+    border-radius: 4px;
+    background-color: #FFFFFF;
+    box-shadow: 0 8px 30px 0 rgba(0,0,0,0.1);
+    padding: 30px;
+    padding-right: 10px;
+    margin-top: 30px;
+    margin-bottom: 10px;
+  }
+
+
+.form-control shiny-bound-input shinyjs-resettable{
+    box-sizing:border-box
+}

@@ -1,6 +1,6 @@
 showDataModal <- function(input) {
   modalDialog(
-    title = "Show Data",
+    title = NULL,
     size = "l",
     easyClose = T,
     
@@ -9,13 +9,13 @@ showDataModal <- function(input) {
         offset = 1,
         width = 10,
         align = "center",
-        h4("Check the first and last 5 rows - looks ok?")
+        div(style="color:white; font-size:120%; font-weight:500", "Check the first and last 5 rows - looks ok?")
       ),
       br(),
       column(
         offset = 1,
         width = 10,
-        align = "center",
+        align = "center",style="color:white;",
         renderTable({
           resinputs = paste0(rep(c("QALY", "COSTS"), times = input$treatments_n),
                              rep(c(1:input$treatments_n), each = 2))

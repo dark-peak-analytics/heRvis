@@ -6,19 +6,26 @@
 #  Copyright (c) Dark Peak Analytics 2020
 #  Email: darkpeakanalytics@gmail.com
 #  ---------------------------
-#  Notes:  Uses custom function not darkpeak functions                    
+#  Notes:  Uses custom function not darkpeak functions
 #  ---------------------------
 
 rm(list = ls())
 
 # get the following functions from the library
+library(plotly)
+library(scales)
 library(ggplot2)
-library(shiny) 
-library(shinyWidgets) 
+library(shiny)
+library(shinyWidgets)
 library(dampack)
 library(shinyjs)
 library(DT)
 library(data.table)
+library(shinycssloaders)
+library(shinythemes)
+library(colourpicker)
+library(ggthemes)
+library(scales)
 
 # source functions
 source("./R/gen_treatment_name_fields.R")
@@ -46,61 +53,86 @@ sample_names = c("Base Case", "Dupimap","Supimap")
 
 
 
-ui <- navbarPage(title = "heRvis",
-                 id = "main_panel",
-                 header = header1,
-                 introTab,
-                 inputdataTab,
-                 outputTab,
-                 useShinyjs(),
-                 footer = footer 
-                 )
-                 
+ui <- navbarPage(
+  title = "heRvis",
+  theme = shinytheme("slate"),
+  id = "main_panel",
+  header = includeCSS("www/custom.css"),
+  introTab,
+  inputdataTab,
+  outputTab,
+  footer = footer
+)
+
 
 
 server <- function(input, output, session){
-  
-  observeEvent(input$showInstruct, {
-    showModal(instructModal)
+
+  # next and prev button navigation system
+  pages = c("Introduction", "Input data", "Outputs")
+  observeEvent(input$nxt, ignoreInit = T, ignoreNULL = T, {
+    page_is = which(pages == input$main_panel)
+    updateNavbarPage(session, "main_panel", pages[page_is + 1])
   })
-  
+  observeEvent(input$prv, ignoreInit = T, ignoreNULL = T, {
+    page_is = which(pages == input$main_panel)
+    updateNavbarPage(session, "main_panel", pages[page_is - 1])
+  })
+  observeEvent(input$main_panel,{
+    page_is = which(pages == input$main_panel)
+    if (page_is == length(pages)) {
+      disable("nxt")
+    } else {
+      enable("nxt")
+    }
+    if(page_is == 1){
+      disable("prv")
+    } else {
+      enable("prv")
+    }
+  })
+
+  # observeEvent(input$showInstruct, {
+  #   showModal(instructModal)
+  # })
+
   observeEvent(input$showDataModal, {
     showModal(showDataModal(input))
   })
-  
+
   observeEvent(input$showStabilityModal, {
     showModal(showStabilityModal)   # R.S. Add input
   })
-  
-  
-  observeEvent(input$instructGifChoice,{
-    if(input$instructGifChoice == "Step 1"){
-  output$instructionGif <- renderImage({
-    list(src = "www/inputData.gif",
-         align = "center",
-         height = '400px',
-         width = '400px')
-  },
-  deleteFile = F)
-  }else if(input$instructGifChoice == "Step 2"){
-    output$instructionGif <- renderImage({
-      list(src = "www/makingplots.gif",
-           align = "center",
-           height = '400px',
-           width = '400px')
-    },
-    deleteFile = F)
-  }else{
-    output$instructionGif <- renderImage({
-      list(src = "www/coffee.gif",
-           align = "center",
-           height = '400px',
-           width = '400px')
-    },
-    deleteFile = F)
-  }
-  }) # end observe event
-  
+
+
+  # observeEvent(input$instructGifChoice,{
+  #   if(input$instructGifChoice == "Step 1"){
+  # output$instructionGif <- renderImage({
+  #   list(src = "www/inputData.gif",
+  #        align = "center",
+  #        height = '400px',
+  #        width = '400px')
+  # },
+  # deleteFile = F)
+  # }else if(input$instructGifChoice == "Step 2"){
+  #   output$instructionGif <- renderImage({
+  #     list(src = "www/makingplots.gif",
+  #          align = "center",
+  #          height = '400px',
+  #          width = '400px')
+  #   },
+  #   deleteFile = F)
+  # }else{
+  #   output$instructionGif <- renderImage({
+  #     list(src = "www/coffee.gif",
+  #          align = "center",
+  #          height = '400px',
+  #          width = '400px')
+  #   },
+  #   deleteFile = F)
+  # }
+  # }) # end observe event
+
   # this needs to be read in HERE in the server
   getValues = function(treatment_names,type="QALY",rm1=F,add_label ="")
   {
@@ -114,7 +146,7 @@ server <- function(input, output, session){
        if (nchar(txt)<2) {
         return(data.frame())
       }
-      
+
       res.temp = read.table(text = txt,sep = " ",fill=T)
       res <- cbind(res,as.numeric(res.temp[,1]))
     }
@@ -125,14 +157,14 @@ server <- function(input, output, session){
     res = res[complete.cases(res),]
     return(res)
   }
-  
+
 
 
   observeEvent(
-    lapply(paste0("treatment_name_", 1:input$treatments_n), 
+    lapply(paste0("treatment_name_", 1:input$treatments_n),
            function(x) input[[x]]),
     {
-      choices = lapply(paste0("treatment_name_", 1:input$treatments_n), 
+      choices = lapply(paste0("treatment_name_", 1:input$treatments_n),
                        function(x) input[[x]])
       if(!is.null(choices)){
         choices = unlist(choices)
@@ -140,36 +172,36 @@ server <- function(input, output, session){
                         choices = choices,
                         selected = choices[1])
       }
-      
+
     }
   )
-  
+
 
   output$validate_q1 <- renderTable(rownames=T,{
-    
+
     resinputs = paste0(
       rep(c("QALY","COSTS"),times = input$treatments_n),
       rep(c(1:input$treatments_n),each=2)
       )
-    
+
     res_df = c() # value
-    
+
     # t_names = grep("treatment_name_",names(input),value = T)
     t_names = unlist(lapply(paste0("treatment_name_",1:input$treatments_n),
                             function(x)input[[x]]))
     t_names = rep(t_names,each=2)
-    
+
     for(q in seq_along(resinputs)){ # loop through treatments
-      txt = input[[resinputs[q]]] 
+      txt = input[[resinputs[q]]]
       if(nchar(txt)>1){
         res.temp = read.table(text = txt,sep = " ",fill=T)
         if(!is.null(res.temp$V1)){
-          res_df <- cbind(res_df,res.temp[,1]) 
+          res_df <- cbind(res_df,res.temp[,1])
           colnames(res_df)[ncol(res_df)] <- paste0(resinputs[q], " (", t_names[q], ")")
         }
-      } 
+      }
     } # end loop
-    
+
     # remove first row if this is selected?
     if(!is.null(res_df)){
       if (input$remove_1st_row) {
@@ -182,19 +214,19 @@ server <- function(input, output, session){
         rep("...", times = ncol(res_df)),
         tail(res_df, 5)
       )
-    } 
+    }
 
     if(is.null(res_df)){
       res_df = ""
     }
-    
+
     # return data-frame
-    
+
     return(  res_df)
-    
+
   })
-  
-  
+
+
   output$input_data_ui <- renderUI({
     # RESET BUTTON
     x <- (input$reset) # print just to re-evaluate this function
@@ -202,15 +234,15 @@ server <- function(input, output, session){
       gen_treatment_name_fields(input$treatments_n)
     )
   })
-  
-  
+
+
   step12 = reactiveVal(1)
   observeEvent(input$load_sample_data,ignoreInit = T,ignoreNULL = T,{
     updateSelectInput(session,inputId = "treatments_n",selected = 2) # hack to have treatments_n being updated no matter what the current states
     updateSelectInput(session,inputId = "treatments_n",selected = 3)
     step12(2) # hack to have one ui element being updated before the other
   })
-  
+
   observeEvent(input$treatments_n,{ # waits until treatments_n is updated
     if(isolate(step12())==2){ # checks if it is supposed to put in new values
       lapply(1:3,function(x){
@@ -219,66 +251,73 @@ server <- function(input, output, session){
         updateTextAreaInput(session, paste0("COSTS",x),value=paste(sample_cost[,x],collapse ="\n"))
       })
       step12(1)
-    } 
-    
-    
+    }
+
+
   })
-  
+
 
   action_monitor = reactive({
     c(input$main_panel, input$plotChoice, input$showStabilityModal)
   })
-  
-  
-  
+
+
+
   observeEvent(action_monitor(),ignoreInit = T,{
-    
-    
+
+
     # retrive names, qalys, and costs from text fields
 
     n = input$treatments_n
-    
+
     if(!is.null(n)){
 
     treatment_names = unlist(lapply(
       paste0("treatment_name_",1:input$treatments_n),
                                     function(x)input[[x]]))
-    
-    
+
+
     qalys = getValues(treatment_names = treatment_names,
                       type = "QALY",
                       rm1 = input$remove_1st_row)
-    
+
     costs = getValues(treatment_names = treatment_names,
                       type = "COSTS",
                       rm1 = input$remove_1st_row)
-    
+
+    colors = unlist(lapply(1:n, function(i){input[[paste0("treatment_color_",i)]]}))
+
     # create Stability plot output
 
     output$stabilityPlot <- renderPlot({
-      
-      checkStability(lambda = input$lambda,
+
+      checkStability(
+        colors = colors,
+        lambda = input$lambda,
         total_costs = as.matrix(costs),
         total_qalys = as.matrix(qalys),
-        withinShiny = T)
-      
+        withinShiny = T
+      )
+
     })
-  
-    
+
+
     # if (ncol(qalys) >= 2 & ncol(costs) >= 2) {
-    
+
     # create plot output
       if (input$plotChoice == "CEPlane") {
-        
+
         output$results_plot <- renderPlot({
           makeCEPlane(
             total_costs = costs,
             total_qalys = qalys,
+            color=colors,
+            thres = input$lambda,
             comparitor = input$ref_index,
             treatment = treatment_names[-which(treatment_names == input$ref_index)]
           )
         })
-        
+
         output$downloadPlot <- downloadHandler(
           filename = function(){paste("heRvis_CEplane",'.png',sep='')},
           content = function(file){
@@ -287,6 +326,7 @@ server <- function(input, output, session){
                      thresh = input$lambda,
                      total_costs = costs,
                      total_qalys = qalys,
+                     color=colors,
                      comparitor = input$ref_index,
                      treatment = treatment_names[-which(treatment_names == input$ref_index)]
                    ))
@@ -299,16 +339,18 @@ server <- function(input, output, session){
           makeCEAC(
             total_costs = costs,
             total_qalys = qalys,
+            colors = colors,
             treatment = treatment_names
           )
         })
-        
+
         output$downloadPlot <- downloadHandler(
           filename = function(){paste("heRvis_CEAC",'.png',sep='')},
           content = function(file){
             ggsave(filename = file,
                    plot= makeCEAC(
                      total_costs = costs,
+                     colors = colors,
                      total_qalys = qalys,
                      treatment = treatment_names
                    ))
@@ -319,36 +361,38 @@ server <- function(input, output, session){
       # always create tbl
       output$results_tbl <- renderDataTable({
         createICERtable(
-          total_costs = costs, 
+          total_costs = costs,
           total_qalys = qalys,
-          ref_index = input$ref_index
+          ref_index = input$ref_index,
+          ci = input$show_95ci
           )
       })
 
       # hide/show depending on selection
       if (input$plotChoice == "CEAC" | input$plotChoice == "CEPlane") {
-        
-        hide("results_tbl")
+
+        hide("icer_tbl_div")
         show("results_plot")
         show("downloadPlot")
-        
+
       } else {
-        
+
         hide("results_plot")
-        show("results_tbl")
+        show("icer_tbl_div")
+        # show("results_tbl")
         hide("downloadPlot")
-        
+
       }
- 
+
     }
 
-    
+
 
   })
-  
 
-  
-  
+
+
+
 }
 
 

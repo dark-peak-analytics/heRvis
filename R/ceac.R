@@ -1,4 +1,4 @@
-makeCEAC = function (total_costs = example_TC, total_qalys = example_TQ, 
+makeCEAC = function (total_costs = example_TC, total_qalys = example_TQ, colors = NULL,
     treatment = c("treat 1", "notreat"), lambda_min = 0, lambda_max = 50000) 
 {
 
@@ -7,10 +7,7 @@ makeCEAC = function (total_costs = example_TC, total_qalys = example_TQ,
     return(noDataPlot())
   }
   
-
-
-    all_names = colnames(total_costs)
-    legend_colors = rainbow(n = ncol(total_costs))
+    legend_colors = if(!is.null(colors)){colors} else {rainbow(n = ncol(total_costs))}
     names(legend_colors) = colnames(total_costs)
     dash_numbers = 1:ncol(total_costs)
     names(dash_numbers) = colnames(total_costs)
@@ -27,7 +24,7 @@ makeCEAC = function (total_costs = example_TC, total_qalys = example_TQ,
             value = apply(nb, 1, mean))
         df_CEAC = rbind(df_CEAC, nb)
     }
-    ggplot2::ggplot(data = df_CEAC, ggplot2::aes(x = lambda, 
+    plot <- ggplot2::ggplot(data = df_CEAC, ggplot2::aes(x = lambda, 
         y = value, col = Intervention)) + ggplot2::theme_minimal() + 
         ggplot2::theme(legend.position = "top", legend.text = ggplot2::element_text(size = 11), 
             legend.title = ggplot2::element_text(size = 11), 
@@ -37,5 +34,14 @@ makeCEAC = function (total_costs = example_TC, total_qalys = example_TQ,
         ggplot2::xlab(label = "Willingness-to-pay (GBP)") + ggplot2::labs(title = "Cost Effectiveness Acceptability Curves", 
         subtitle = "The probability each preferred intervention is most cost effective against willingness to pay for each QALY threshold.") + 
         ggplot2::scale_color_manual(name = "Treatment", values = legend_colors) + 
-        NULL
+        theme(
+                  legend.position = "top",
+                  legend.text = element_text(size = 14),
+                  legend.title = element_text(size = 14),
+                  axis.text.x = element_text(size = 14),
+                  axis.text.y = element_text(size = 14),
+                  title = element_text(size = 14)
+                )
+    
+    return(plot)
 }

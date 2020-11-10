@@ -6,7 +6,8 @@ checkStability <- function(total_costs = example_TC,
                            BS_samples = 500,
                            withinShiny = F,
                            lambda = 20000,
-                           plot_CnQ = T){
+                           plot_CnQ = T,
+                           colors = NULL){
   
   # test the number of rows are equal in cost and qaly matrices
   testthat::expect_equal(nrow(total_costs),nrow(total_qalys))
@@ -131,6 +132,13 @@ checkStability <- function(total_costs = example_TC,
   
   #=== PLOT FACET =================================#
   
+  #legend_colors = if(!is.null(colors)){colors} else {rainbow(n = ncol(total_costs))}
+  #
+  #names(legend_colors) = strategies
+  #
+  #legend_colors = legend_colors[names(legend_colors) %in% strategies]
+  #  
+  
   withProgress(message = 'Making plot',
                value = 0, {
   
@@ -143,10 +151,18 @@ checkStability <- function(total_costs = example_TC,
                   subtitle = paste0("Credible intervals & means based on reording the results table ",BS_samples, " times."))+
     ggplot2::ylab(label = "")+
     ggplot2::geom_line()+   # add lineplot
-    ggplot2::geom_ribbon(ggplot2::aes(ymin = min, ymax = max, fill = Strategy),alpha = 0.3)+
+    ggplot2::geom_ribbon(ggplot2::aes(ymin = min, ymax = max, 
+                                      fill = Strategy),alpha = 0.3)+
     ggplot2::facet_wrap(~Metric,
                         nrow = 1,
-                        scales =  "free_y")  # facet split
+                        scales =  "free_y")+  # facet split
+    ggplot2::scale_fill_manual(name = "Strategy", 
+                                values = colors)+
+   ggplot2::scale_color_manual(name = "Strategy", 
+                              values = colors)
+                 
+                 
+                   
                  
                }) # close withprogress
   

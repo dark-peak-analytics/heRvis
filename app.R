@@ -23,6 +23,7 @@ library(shinycssloaders)
 library(shinythemes)
 library(colourpicker)
 library(ggthemes)
+library(scales)
 
 # source functions
 source("./R/gen_treatment_name_fields.R")

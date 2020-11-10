@@ -6,25 +6,27 @@
 #  Copyright (c) Dark Peak Analytics 2020
 #  Email: darkpeakanalytics@gmail.com
 #  ---------------------------
-#  Notes:  relies on darkpeak package functions                    
+#  Notes:  Uses custom function not darkpeak functions                    
 #  ---------------------------
 
 rm(list = ls())
 
 # get the following functions from the library
 library(ggplot2)
-library(darkpeak) # note may need to install from github
 library(shiny) 
 library(shinyWidgets) 
 library(dampack)
 library(shinyjs)
 library(DT)
+library(data.table)
 
 # source functions
 source("./R/gen_treatment_name_fields.R")
 source("./R/ceac.R")
 source("./R/cep.R")
 source("./R/icertbl.R")
+source("./R/checkStability.R")
+
 
 # source the UI components
 source("./UI_parts/footer.R")
@@ -35,12 +37,11 @@ source("./UI_parts/aboutTab.R")
 source("./UI_parts/header.R")
 source("./UI_parts/instructModal.R")
 source("./UI_parts/showDataModal.R")
-
-
+source("./UI_parts/showStabilityModal.R")
 
 sample_cost = darkpeak::example_TC[,c(3,2,4)]
 sample_qalys = darkpeak::example_TQ[,c(3,2,4)]
-sample_names = c("Standard of Care", "Dupimap","Supimap")
+sample_names = c("Base Case", "Dupimap","Supimap")
 
 
 
@@ -67,6 +68,38 @@ server <- function(input, output, session){
     showModal(showDataModal(input))
   })
   
+  observeEvent(input$showStabilityModal, {
+    showModal(showStabilityModal)   # R.S. Add input
+  })
+  
+  
+  observeEvent(input$instructGifChoice,{
+    if(input$instructGifChoice == "Step 1"){
+  output$instructionGif <- renderImage({
+    list(src = "www/inputData.gif",
+         align = "center",
+         height = '400px',
+         width = '400px')
+  },
+  deleteFile = F)
+  }else if(input$instructGifChoice == "Step 2"){
+    output$instructionGif <- renderImage({
+      list(src = "www/makingplots.gif",
+           align = "center",
+           height = '400px',
+           width = '400px')
+    },
+    deleteFile = F)
+  }else{
+    output$instructionGif <- renderImage({
+      list(src = "www/coffee.gif",
+           align = "center",
+           height = '400px',
+           width = '400px')
+    },
+    deleteFile = F)
+  }
+  }) # end observe event
   
   # this needs to be read in HERE in the server
   getValues = function(treatment_names,type="QALY",rm1=F,add_label ="")
@@ -96,19 +129,22 @@ server <- function(input, output, session){
 
 
   observeEvent(
-    lapply(paste0("treatment_name_", 1:input$treatments_n), function(x) input[[x]]),
+    lapply(paste0("treatment_name_", 1:input$treatments_n), 
+           function(x) input[[x]]),
     {
-      choices = lapply(paste0("treatment_name_", 1:input$treatments_n), function(x) input[[x]])
+      choices = lapply(paste0("treatment_name_", 1:input$treatments_n), 
+                       function(x) input[[x]])
       if(!is.null(choices)){
         choices = unlist(choices)
-      updateSelectInput(session, "ref_index",choices = choices,selected = choices[1])
+      updateSelectInput(session, "ref_index",
+                        choices = choices,
+                        selected = choices[1])
       }
       
     }
   )
   
-  
-  
+
   output$validate_q1 <- renderTable(rownames=T,{
     
     resinputs = paste0(
@@ -188,10 +224,9 @@ server <- function(input, output, session){
     
   })
   
-  
-  
+
   action_monitor = reactive({
-    c(input$main_panel ,input$plotChoice)
+    c(input$main_panel, input$plotChoice, input$showStabilityModal)
   })
   
   
@@ -212,19 +247,29 @@ server <- function(input, output, session){
     
     qalys = getValues(treatment_names = treatment_names,
                       type = "QALY",
-                      rm1 = input$remove_1st_row
-    )
+                      rm1 = input$remove_1st_row)
     
     costs = getValues(treatment_names = treatment_names,
                       type = "COSTS",
-                      rm1 = input$remove_1st_row
-    )
+                      rm1 = input$remove_1st_row)
     
+    # create Stability plot output
+
+    output$stabilityPlot <- renderPlot({
+      
+      checkStability(lambda = input$lambda,
+        total_costs = as.matrix(costs),
+        total_qalys = as.matrix(qalys),
+        withinShiny = T)
+      
+    })
+  
     
     # if (ncol(qalys) >= 2 & ncol(costs) >= 2) {
-
-      # create plot output
+    
+    # create plot output
       if (input$plotChoice == "CEPlane") {
+        
         output$results_plot <- renderPlot({
           makeCEPlane(
             total_costs = costs,
@@ -233,6 +278,20 @@ server <- function(input, output, session){
             treatment = treatment_names[-which(treatment_names == input$ref_index)]
           )
         })
+        
+        output$downloadPlot <- downloadHandler(
+          filename = function(){paste("heRvis_CEplane",'.png',sep='')},
+          content = function(file){
+            ggsave(filename = file,
+                   plot= makeCEPlane(
+                     thresh = input$lambda,
+                     total_costs = costs,
+                     total_qalys = qalys,
+                     comparitor = input$ref_index,
+                     treatment = treatment_names[-which(treatment_names == input$ref_index)]
+                   ))
+          }
+        )
       }
 
       if (input$plotChoice == "CEAC") {
@@ -243,6 +302,18 @@ server <- function(input, output, session){
             treatment = treatment_names
           )
         })
+        
+        output$downloadPlot <- downloadHandler(
+          filename = function(){paste("heRvis_CEAC",'.png',sep='')},
+          content = function(file){
+            ggsave(filename = file,
+                   plot= makeCEAC(
+                     total_costs = costs,
+                     total_qalys = qalys,
+                     treatment = treatment_names
+                   ))
+          }
+        )
       }
 
       # always create tbl
@@ -256,20 +327,19 @@ server <- function(input, output, session){
 
       # hide/show depending on selection
       if (input$plotChoice == "CEAC" | input$plotChoice == "CEPlane") {
+        
         hide("results_tbl")
         show("results_plot")
+        show("downloadPlot")
+        
       } else {
+        
         hide("results_plot")
         show("results_tbl")
+        hide("downloadPlot")
+        
       }
-    #  }  selse {
-    #   output$results_plot <- renderPlot({
-    #     ggplot()
-    #   })
-    #   output$results_tbl <- renderDataTable({
-    #     "No Data"
-    #   })
-    # } 
+ 
     }
 
     

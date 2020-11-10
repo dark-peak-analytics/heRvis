@@ -3,12 +3,9 @@ createICERtable = function (total_costs = example_TC, total_qalys = example_TQ,
                             ref_index = 1, ci = T) 
 {
 
-if(ncol(total_costs)<2){
-  return(DT::datatable(data = data.frame("NO DATA"))
-)
-}
-if(ncol(total_qalys)<2){
-return(DT::datatable(data = data.frame("NO DATA"="")))
+# return an empty data-set if there is no data.
+if(ncol(total_costs)<2 | ncol(total_qalys)<2){
+  return(DT::datatable(data = data.frame("NO DATA")))
 }
 
 ref_index = which(colnames(total_costs) == ref_index)
@@ -49,12 +46,17 @@ ref_index = which(colnames(total_costs) == ref_index)
   res_table$temp = c("Costs (GBP)", "Costs (GBP)", "QALYs", 
                      "QALYs", "Incremental Net Benefit (GBP)", "Incremental Net Benefit (GBP)")
   DT::datatable(data = res_table, class = "compact cell-border", 
-                options = list(colReorder = TRUE, dom = "tB", buttons = c("copy", 
-                                                                          "csv", "excel", "pdf", "print"), columnDefs = list(list(width = "170px", 
-                                                                                                                                  targets = 0), list(visible = FALSE, targets = n+1)), 
-                               rowGroup = list(dataSrc = n+1), initComplete = DT::JS("function(settings, json) {", 
-                                                                                   "$(this.api().table().header()).css({'background-color': '#D3D3D3', 'color': '#000'});", 
-                                                                                   "}")), extensions = c("Buttons", "ColReorder", 
-                                                                                                         "RowGroup"), rownames = c("Costs", "Incremental Costs", 
-                                                                                                                                   "QALYs", "Incremental QALYs", "20,000 GBP", "30,000 GBP"))
+                options = list(colReorder = TRUE, 
+                               dom = "tB", 
+                               buttons = c("copy","csv", "excel", "pdf", "print"), 
+                               columnDefs = list(list(width = "170px", 
+                                                      targets = 0), 
+                                                 list(visible = FALSE, 
+                                                      targets = n+1)), 
+                               rowGroup = list(dataSrc = n+1), 
+                               initComplete = DT::JS("function(settings, json) {",
+                                                     "$(this.api().table().header()).css({'background-color': '#D3D3D3', 'color': '#000'});",
+                                                     "}")), 
+                extensions = c("Buttons", "ColReorder","RowGroup"), 
+                rownames = c("Costs", "Incremental Costs","QALYs", "Incremental QALYs", "20,000 GBP", "30,000 GBP"))
 }

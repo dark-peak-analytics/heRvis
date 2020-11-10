@@ -5,7 +5,10 @@ inputdataTab <- tabPanel(
     column(
       offset  = 10,
       width = 2,
-      actionButton(inputId = "showInstruct",label =  icon(name ="info-circle"))
+      # action button custom icon with green.
+      actionButton(inputId = "showInstruct",
+                   label =  icon(name ="info-circle","fa-2x"),
+                   style="color: #fff; background-color: #008000; border-color: #008000")
     )),
     
     fluidRow(
@@ -17,12 +20,13 @@ inputdataTab <- tabPanel(
           class = "panel1",
           selectizeInput(
             inputId = "treatments_n",
-            label = "How many treatments?",
+            label = "How many strategies?",
             choices = c(2:6)
           ),
-          checkboxInput("remove_1st_row", label = "Does the 1st row contain labels?"),
+          numericInput("lambda",label = "Lambda",value = 30000,min = 0,max = 200000),
+          checkboxInput("remove_1st_row", label = "The 1st row contains labels"),
           actionButton("reset", "Reset all fields"),
-          actionButton("load_sample_data", "Load sample data")
+          actionButton("load_sample_data", "Load example data")
         ),
         br(),
         br(),
@@ -38,22 +42,11 @@ inputdataTab <- tabPanel(
           offset = 1,
           width = 10,
           align = "center",
-          actionButton("showDataModal", "Show Table", icon = icon("table")))),
-        
-      fluidRow(
-        column(
-          offset = 1,
-          width = 10,
-          align = "center",
-          h4("Check the first and last 5 rows - looks ok?")
-        ),
-        br(),
-        column(
-          offset = 1,
-          width = 10,
-          align = "center",
-          panel(tableOutput("validate_q1"))
+          actionButton(inputId = "showDataModal",
+                       label =  "Show Table", 
+                       icon = icon("table")),
+          actionButton(inputId = "showStabilityModal",
+                       label =  "Show Stability Plot", 
+                       icon = icon("area-chart"))))
         )
-      )
-    )
                          )

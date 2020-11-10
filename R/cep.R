@@ -5,13 +5,10 @@ makeCEPlane = function (total_costs = example_TC, total_qalys = example_TQ,
                         show_ellipse = F) 
 {
 
-if(ncol(total_costs)<2){
-  return(ggplot()+  geom_label(aes(x=1,y=1,label = "NO DATA"),size=20)
-)
-}
-if(ncol(total_qalys)<2){
-  return(ggplot()+ggtitle("NO DATA"))
-}
+  # return an empty data-set if there is no data.
+  if(ncol(total_costs)<2 | ncol(total_qalys)<2){
+    return(noDataPlot())
+  }
 
   ce_plane_plot = ggplot2::ggplot() + ggplot2::geom_vline(xintercept = 0) + 
     ggplot2::geom_hline(yintercept = 0) + ggplot2::theme_minimal() + 

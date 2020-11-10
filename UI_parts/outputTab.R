@@ -1,4 +1,4 @@
-outputTab <- tabPanel("Output",
+outputTab <- tabPanel("Outputs",
                       
                       # add choice of plot
                       panel(
@@ -14,11 +14,22 @@ outputTab <- tabPanel("Output",
                           column(4,align="center",
                           selectInput("ref_index","Select Reference",choices = NULL)
                           ),
-                          hr(),
+                          hr(),br(),br(),br(),
 
 
-                          plotOutput(outputId = "results_plot", height = "500px",width = "100%"),
+                          plotOutput(outputId = "results_plot",
+                                     height = "500px",
+                                     width = "100%"),
+                          
                           dataTableOutput(outputId = "results_tbl"),
+                            
+                          br(),br(),br(),br(),
+                          
+                          column(width = 4,
+                                 offset = 6,
+                                 align="center",
+                                 downloadButton('downloadPlot','Download Plot')),
+                          
                           br(),br(),br()
                       )
                         

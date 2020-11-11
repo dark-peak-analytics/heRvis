@@ -8,6 +8,9 @@ if(ncol(total_costs)<2 | ncol(total_qalys)<2){
   return(DT::datatable(data = data.frame("NO DATA")))
 }
 
+  # a change
+  
+  
 ref_index = which(colnames(total_costs) == ref_index)
 
   n = ncol(total_costs)

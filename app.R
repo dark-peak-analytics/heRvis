@@ -61,6 +61,7 @@ ui <- navbarPage(
   introTab,
   inputdataTab,
   outputTab,
+  aboutTab,
   footer = footer
 )
 
@@ -69,15 +70,18 @@ ui <- navbarPage(
 server <- function(input, output, session){
 
   # next and prev button navigation system
-  pages = c("Introduction", "Input data", "Outputs")
+  pages = c("Introduction", "Input data", "Outputs", "About")
+  
   observeEvent(input$nxt, ignoreInit = T, ignoreNULL = T, {
     page_is = which(pages == input$main_panel)
     updateNavbarPage(session, "main_panel", pages[page_is + 1])
   })
+  
   observeEvent(input$prv, ignoreInit = T, ignoreNULL = T, {
     page_is = which(pages == input$main_panel)
     updateNavbarPage(session, "main_panel", pages[page_is - 1])
   })
+  
   observeEvent(input$main_panel,{
     page_is = which(pages == input$main_panel)
     if (page_is == length(pages)) {

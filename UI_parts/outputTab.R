@@ -38,14 +38,33 @@ outputTab <- tabPanel(
                     id="icer_tbl_div",
                     HTML("<b>Show 95% CI? </b>"),switchInput(inputId = "show_95ci",label = "",value=T,inline = T) ,
                     dataTableOutput(outputId = "results_tbl")
-                    ),
+                    )
+            ), # end column
 
-                br(), br(), 
-
-                downloadButton("downloadPlot", "Download Plot"),
-
-                br(), br(), br()
+                br(), br(),
+            
+            # Download section
+            fluidRow(
+                column(
+                    offset = 3, 
+                    width = 3, 
+                    align = "center",
+                    downloadButton(outputId = "downloadPlot",
+                                   label =  "Download Plot"
+                )),
+                column(offset = 0,
+                       width = 3,
+                       align = "center",
+                       selectInput(width = "150px",
+                                   inputId = "fformat",
+                                   label =  NULL, 
+                                   choices=c("png","tiff","jpeg","pdf"), 
+                                   selected = "png", 
+                                   multiple = FALSE, 
+                                   selectize = TRUE))
+            ),
+            
+            br(), br()
             )
         )
     )
-)

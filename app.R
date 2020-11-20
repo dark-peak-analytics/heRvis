@@ -304,7 +304,7 @@ server <- function(input, output, session){
       )
 
     })
-
+    
 
     # if (ncol(qalys) >= 2 & ncol(costs) >= 2) {
 
@@ -321,11 +321,13 @@ server <- function(input, output, session){
             treatment = treatment_names[-which(treatment_names == input$ref_index)]
           )
         })
+        
 
         output$downloadPlot <- downloadHandler(
-          filename = function(){paste("heRvis_CEplane",'.png',sep='')},
+          filename = function(){paste("heRvis_CEplane",input$fformat,sep='.')},
           content = function(file){
             ggsave(filename = file,
+                   device = input$fformat,
                    plot= makeCEPlane(
                      thresh = input$lambda,
                      total_costs = costs,
@@ -349,9 +351,10 @@ server <- function(input, output, session){
         })
 
         output$downloadPlot <- downloadHandler(
-          filename = function(){paste("heRvis_CEAC",'.png',sep='')},
+          filename = function(){paste("heRvis_CEAC",input$fformat,sep='.')},
           content = function(file){
             ggsave(filename = file,
+                   device = input$fformat,
                    plot= makeCEAC(
                      total_costs = costs,
                      colors = colors,

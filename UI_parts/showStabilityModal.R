@@ -5,7 +5,12 @@ showStabilityModal <- modalDialog(
     size = "l",
     easyClose = F,
     
-    fluidRow(
+    fluidRow(div(style="color:white",
+      "It is sometimes unclear how many iterations (PSA runs) are necessary in a health economic model incorporating parameter uncertainty.",
+      "This is discussed in detail in a paper by ", 
+      tags$a(href="https://www.valueinhealthjournal.com/article/S1098-3015(17)32408-7/abstract", "Hatswell et al."),
+      "The graph below shows the 95% credible interval for the mean costs, QALYs and Net Benefit for each strategy.",
+      "This is obtained by re-ordering the costs and QALYs pasted by the user 500 times and obtaining the cumulative mean from 1 to the nth iteration"), # close div
       br(),
       column(offset = 1,
              width = 10,
@@ -18,6 +23,7 @@ showStabilityModal <- modalDialog(
                           width = "100%")
              )
              
-             )))
+             ))
+)
 
         

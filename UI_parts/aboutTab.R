@@ -17,7 +17,7 @@ aboutTab <- tabPanel(
           tags$h2("Other software"),
           "For Value of Information Analysis and to create other plots we recommend",
           tags$a(href="http://savi.shef.ac.uk/SAVI/", "SAVI app"), " and ",
-          tags$a(href="https://egon.stats.ucl.ac.uk/projects/BCEAweb/", "BCEAweb"),
+          tags$a(href="https://egon.stats.ucl.ac.uk/projects/BCEAweb/", "BCEAweb."),
           "This tool is focused primarily on the aesthetics of reporting results",
           tags$br(),tags$br(),
           
@@ -26,6 +26,7 @@ aboutTab <- tabPanel(
           tags$a(href="https://github.com/RobertASmith/heRvis", "our GitHub account"), 
           "Please feel free to clone the repo, create issues and send pull-requests with improvements.",
           "Third parties are welcome to use the code for commercial purposes so long as all repurposed code is also made available under a AGPL license.",
+          "Alternatively feel free to drop us an email with suggestions of improved functionality - we are more than happy to adapt the tool.",
           tags$br(),tags$br(),
           
           tags$h2("Further instructions"),
@@ -39,6 +40,7 @@ aboutTab <- tabPanel(
           ),
           tags$br(),
           "We would also like to thank the following for their comments on the tool:",
+          tags$br(),
           tags$ul(
             tags$li(HTML("<b>Rami Cosulich</b>, University of Sheffield")), 
             tags$li(HTML("<b>Frederick Thielen</b>, Erasmus University Rotterdam"))

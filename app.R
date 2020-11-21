@@ -59,11 +59,11 @@ ui <- navbarPage(
   id = "main_panel",
   header = includeCSS("www/custom.css"),
   introTab,
-  useShinyjs(),
   inputdataTab,
   outputTab,
   aboutTab,
   footer = footer
+  
 )
 
 

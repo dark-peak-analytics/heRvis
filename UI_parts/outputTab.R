@@ -1,5 +1,6 @@
 outputTab <- tabPanel(
     "Outputs",
+    useShinyjs(),
     
     
     # scripts to make downloaded match fit screen width

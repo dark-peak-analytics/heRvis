@@ -1,5 +1,24 @@
 outputTab <- tabPanel(
     "Outputs",
+    
+    
+    # scripts to make downloaded match fit screen width
+    tags$script("$(document).on('shiny:connected', function(event) {
+              var myWidth = $(window).width();
+              Shiny.onInputChange('shiny_width',myWidth)
+              
+            });
+            $(window).resize(function(e) {
+            var myWidth = $(window).width();
+              Shiny.onInputChange('shiny_width',myWidth)
+              
+            });"),
+    #     
+    # tags$script("$(document).on('shiny:connected', function(event) {
+    # var myHeight = $(window).height();
+    # Shiny.onInputChange('shiny_height',myHeight)
+    # 
+    # });"),
 
     # add choice of plot
     column(
@@ -38,14 +57,43 @@ outputTab <- tabPanel(
                     id="icer_tbl_div",
                     HTML("<b>Show 95% CI? </b>"),switchInput(inputId = "show_95ci",label = "",value=T,inline = T) ,
                     dataTableOutput(outputId = "results_tbl")
-                    ),
+                    )
+            ), # end column
 
-                br(), br(), 
-
-                downloadButton("downloadPlot", "Download Plot"),
-
-                br(), br(), br()
+                br(), br(),
+            
+            # Download section
+            fluidRow(
+                div(style="white-space: nowrap;",
+                    
+                column(offset = 3,
+                       width = 2,
+                       align = "right",
+                       h4("File format:")
+                       ),
+                
+                column(offset = 0,
+                       width = 2,
+                       align = "left",
+                       selectInput(width = "150px",
+                                   inputId = "fformat",
+                                   label =  NULL, 
+                                   choices=c("png","tiff","jpeg","pdf"), 
+                                   selected = "png", 
+                                   multiple = FALSE, 
+                                   selectize = TRUE)
+                       ),
+                column(
+                    offset = 0, 
+                    width = 2, 
+                    align = "left",
+                    downloadButton(outputId = "downloadPlot",
+                                   label =  "Download Plot")
+                )
+            )
+            ),
+            
+            br(), br()
             )
         )
     )
-)

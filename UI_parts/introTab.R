@@ -14,8 +14,7 @@ introTab <-
         width = 7,
         span(HTML("Welcome to the <b>h</b>ealth <b>e</b>conomic <b>R</b>shiny <b>vis</b>ualisation builder (<b>heRvis</b>)."),style="font-size:150%; font-weight:350"),
         br(),br(),
-        p("Health Economists regularly use MS Excel to undertake economic evaluations. However, Excel plots often look very basic and dated.
-          This tool allows you to take the outputs from Excel model, and create publication quality plots and tables within minutes.")
+        p("Health Economists regularly use MS Excel to undertake economic evaluations. This tool allows you to take the outputs from an Excel model, and create publication quality plots and tables within minutes.")
         
       )), # close column and row
       
@@ -66,24 +65,19 @@ panel(
       offset = 1,
       br(),
       div(HTML("Quick tutorial: how to use heRvis?."), style = "font-size:150%; font-weight:450; text-align:center;"),
-      br(),br(),br(),br(),
+      br(),br(),br(),
       
       # step 0
       fluidRow(
         column(
           offset = 1,
-          width = 4,
-          h4("Step 0"),
-          HTML("If you just want to check out how the tool works, 
-          go to the next tab (<b>Input data</b>) and click 'Load Example' to generate some 
-          sample results. If you want to create nice plots and tables for 
-          your own data, follow the steps below.")
-        ),
-        column(
-          offset = 1,
-          width = 6,
-          h4(""),
-          img(src="step_1.gif",width = "450px")
+          width = 10,
+          span(HTML("
+          <p>If you just want to check out how the tool works, 
+          go to the next tab (<b>Input data</b>) and click '<b>Load Example</b>' to generate some 
+          sample results.</p>
+          <p>If you want to create nice plots and tables for 
+          your own data, <b>follow the steps below</b>.</p>"),style="font-size:120%")
         )
       ),
       div(style="padding-top:100px"),
@@ -139,7 +133,7 @@ panel(
           offset = 1,
           width = 5,
           h4("Step 4"),
-          HTML("Review you data to make sure everything got copy-pasted correctly. The tab shows you the first and last first rows.")
+          HTML("Review your data to make sure everything got copy-pasted correctly. The tab shows you the first and last first rows.")
         ),
         column(
           width = 5,
@@ -154,14 +148,15 @@ panel(
           offset = 1,
           width = 5,
           h4("Step 5"),
-          HTML("Continue to the Output tab and create some nice fiugres.")
+          HTML("Continue to the Output tab and create some nice figures.")
         ),
         column(
           width = 5,
           h4(""),
           HTML("")
         )
-      )
+      ),
+      br()
     )
   )
 )

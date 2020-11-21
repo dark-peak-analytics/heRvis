@@ -59,8 +59,10 @@ ui <- navbarPage(
   id = "main_panel",
   header = includeCSS("www/custom.css"),
   introTab,
+  useShinyjs(),
   inputdataTab,
   outputTab,
+  aboutTab,
   footer = footer
 )
 
@@ -69,15 +71,18 @@ ui <- navbarPage(
 server <- function(input, output, session){
 
   # next and prev button navigation system
-  pages = c("Introduction", "Input data", "Outputs")
+  pages = c("Introduction", "Input data", "Outputs", "About")
+  
   observeEvent(input$nxt, ignoreInit = T, ignoreNULL = T, {
     page_is = which(pages == input$main_panel)
     updateNavbarPage(session, "main_panel", pages[page_is + 1])
   })
+  
   observeEvent(input$prv, ignoreInit = T, ignoreNULL = T, {
     page_is = which(pages == input$main_panel)
     updateNavbarPage(session, "main_panel", pages[page_is - 1])
   })
+  
   observeEvent(input$main_panel,{
     page_is = which(pages == input$main_panel)
     if (page_is == length(pages)) {
@@ -104,34 +109,6 @@ server <- function(input, output, session){
     showModal(showStabilityModal)   # R.S. Add input
   })
 
-
-  # observeEvent(input$instructGifChoice,{
-  #   if(input$instructGifChoice == "Step 1"){
-  # output$instructionGif <- renderImage({
-  #   list(src = "www/inputData.gif",
-  #        align = "center",
-  #        height = '400px',
-  #        width = '400px')
-  # },
-  # deleteFile = F)
-  # }else if(input$instructGifChoice == "Step 2"){
-  #   output$instructionGif <- renderImage({
-  #     list(src = "www/makingplots.gif",
-  #          align = "center",
-  #          height = '400px',
-  #          width = '400px')
-  #   },
-  #   deleteFile = F)
-  # }else{
-  #   output$instructionGif <- renderImage({
-  #     list(src = "www/coffee.gif",
-  #          align = "center",
-  #          height = '400px',
-  #          width = '400px')
-  #   },
-  #   deleteFile = F)
-  # }
-  # }) # end observe event
 
   # this needs to be read in HERE in the server
   getValues = function(treatment_names,type="QALY",rm1=F,add_label ="")
@@ -300,7 +277,7 @@ server <- function(input, output, session){
       )
 
     })
-
+    
 
     # if (ncol(qalys) >= 2 & ncol(costs) >= 2) {
 
@@ -317,11 +294,17 @@ server <- function(input, output, session){
             treatment = treatment_names[-which(treatment_names == input$ref_index)]
           )
         })
+        
 
         output$downloadPlot <- downloadHandler(
-          filename = function(){paste("heRvis_CEplane",'.png',sep='')},
+          filename = function(){paste("heRvis_CEplane",input$fformat,sep='.')},
           content = function(file){
             ggsave(filename = file,
+                   dpi = 72,
+                   device = input$fformat,
+                   units = "in",
+                   width = (input$shiny_width/64)*(9/12),
+                   height = 500/64,# input$shiny_height/64,
                    plot= makeCEPlane(
                      thresh = input$lambda,
                      total_costs = costs,
@@ -345,9 +328,14 @@ server <- function(input, output, session){
         })
 
         output$downloadPlot <- downloadHandler(
-          filename = function(){paste("heRvis_CEAC",'.png',sep='')},
+          filename = function(){paste("heRvis_CEAC",input$fformat,sep='.')},
           content = function(file){
             ggsave(filename = file,
+                   dpi = 72,
+                   device = input$fformat,
+                   units = "in",
+                   width = (input$shiny_width/64)*(9/12),
+                   height = 500/64,# input$shiny_height/64,
                    plot= makeCEAC(
                      total_costs = costs,
                      colors = colors,

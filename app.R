@@ -59,6 +59,7 @@ ui <- navbarPage(
   id = "main_panel",
   header = includeCSS("www/custom.css"),
   introTab,
+  useShinyjs(),
   inputdataTab,
   outputTab,
   aboutTab,
@@ -108,34 +109,6 @@ server <- function(input, output, session){
     showModal(showStabilityModal)   # R.S. Add input
   })
 
-
-  # observeEvent(input$instructGifChoice,{
-  #   if(input$instructGifChoice == "Step 1"){
-  # output$instructionGif <- renderImage({
-  #   list(src = "www/inputData.gif",
-  #        align = "center",
-  #        height = '400px',
-  #        width = '400px')
-  # },
-  # deleteFile = F)
-  # }else if(input$instructGifChoice == "Step 2"){
-  #   output$instructionGif <- renderImage({
-  #     list(src = "www/makingplots.gif",
-  #          align = "center",
-  #          height = '400px',
-  #          width = '400px')
-  #   },
-  #   deleteFile = F)
-  # }else{
-  #   output$instructionGif <- renderImage({
-  #     list(src = "www/coffee.gif",
-  #          align = "center",
-  #          height = '400px',
-  #          width = '400px')
-  #   },
-  #   deleteFile = F)
-  # }
-  # }) # end observe event
 
   # this needs to be read in HERE in the server
   getValues = function(treatment_names,type="QALY",rm1=F,add_label ="")
@@ -327,7 +300,11 @@ server <- function(input, output, session){
           filename = function(){paste("heRvis_CEplane",input$fformat,sep='.')},
           content = function(file){
             ggsave(filename = file,
+                   dpi = 72,
                    device = input$fformat,
+                   units = "in",
+                   width = (input$shiny_width/64)*(9/12),
+                   height = 500/64,# input$shiny_height/64,
                    plot= makeCEPlane(
                      thresh = input$lambda,
                      total_costs = costs,
@@ -354,7 +331,11 @@ server <- function(input, output, session){
           filename = function(){paste("heRvis_CEAC",input$fformat,sep='.')},
           content = function(file){
             ggsave(filename = file,
+                   dpi = 72,
                    device = input$fformat,
+                   units = "in",
+                   width = (input$shiny_width/64)*(9/12),
+                   height = 500/64,# input$shiny_height/64,
                    plot= makeCEAC(
                      total_costs = costs,
                      colors = colors,

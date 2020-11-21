@@ -1,5 +1,24 @@
 outputTab <- tabPanel(
     "Outputs",
+    
+    
+    # scripts to make downloaded match fit screen width
+    tags$script("$(document).on('shiny:connected', function(event) {
+              var myWidth = $(window).width();
+              Shiny.onInputChange('shiny_width',myWidth)
+              
+            });
+            $(window).resize(function(e) {
+            var myWidth = $(window).width();
+              Shiny.onInputChange('shiny_width',myWidth)
+              
+            });"),
+    #     
+    # tags$script("$(document).on('shiny:connected', function(event) {
+    # var myHeight = $(window).height();
+    # Shiny.onInputChange('shiny_height',myHeight)
+    # 
+    # });"),
 
     # add choice of plot
     column(
@@ -45,23 +64,33 @@ outputTab <- tabPanel(
             
             # Download section
             fluidRow(
-                column(
-                    offset = 3, 
-                    width = 3, 
-                    align = "center",
-                    downloadButton(outputId = "downloadPlot",
-                                   label =  "Download Plot"
-                )),
+                div(style="white-space: nowrap;",
+                    
+                column(offset = 3,
+                       width = 2,
+                       align = "right",
+                       h4("File format:")
+                       ),
+                
                 column(offset = 0,
-                       width = 3,
-                       align = "center",
+                       width = 2,
+                       align = "left",
                        selectInput(width = "150px",
                                    inputId = "fformat",
                                    label =  NULL, 
                                    choices=c("png","tiff","jpeg","pdf"), 
                                    selected = "png", 
                                    multiple = FALSE, 
-                                   selectize = TRUE))
+                                   selectize = TRUE)
+                       ),
+                column(
+                    offset = 0, 
+                    width = 2, 
+                    align = "left",
+                    downloadButton(outputId = "downloadPlot",
+                                   label =  "Download Plot")
+                )
+            )
             ),
             
             br(), br()

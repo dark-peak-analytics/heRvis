@@ -65,24 +65,19 @@ panel(
       offset = 1,
       br(),
       div(HTML("Quick tutorial: how to use heRvis?."), style = "font-size:150%; font-weight:450; text-align:center;"),
-      br(),br(),br(),br(),
+      br(),br(),br(),
       
       # step 0
       fluidRow(
         column(
           offset = 1,
-          width = 4,
-          h4("Step 0"),
-          HTML("If you just want to check out how the tool works, 
-          go to the next tab (<b>Input data</b>) and click 'Load Example' to generate some 
-          sample results. If you want to create nice plots and tables for 
-          your own data, follow the steps below.")
-        ),
-        column(
-          offset = 1,
-          width = 6,
-          h4(""),
-          img(src="step_1.gif",width = "450px")
+          width = 10,
+          span(HTML("
+          <p>If you just want to check out how the tool works, 
+          go to the next tab (<b>Input data</b>) and click '<b>Load Example</b>' to generate some 
+          sample results.</p>
+          <p>If you want to create nice plots and tables for 
+          your own data, <b>follow the steps below</b>.</p>"),style="font-size:120%")
         )
       ),
       div(style="padding-top:100px"),
@@ -160,7 +155,8 @@ panel(
           h4(""),
           HTML("")
         )
-      )
+      ),
+      br()
     )
   )
 )

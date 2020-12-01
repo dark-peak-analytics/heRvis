@@ -30,8 +30,9 @@ introTab <-
             tags$a(href = "https://rstudio.github.io/DT/options.html", "DT"),
             ", ",
             tags$a(href = "https://ggplot2.tidyverse.org/", "ggplot2"),
-            ", and many others). You can download the plots for use in your presentations and reports."
-          ),
+            ", and many others). You can download the plots for use in your presentations and reports.
+            The app is hosted on ",
+            tags$a(href = "https://www.shinyapps.io/", "RStudio's secure server"),", no data is collected."),
           br(),
           p(
             "The tool is currently set up to create the following visuals:",
@@ -133,7 +134,7 @@ panel(
           offset = 1,
           width = 5,
           h4("Step 4"),
-          HTML("Review your data to make sure everything got copy-pasted correctly. The tab shows you the first and last first rows.")
+          HTML("Review your data to make sure everything got copy-pasted correctly. The tab shows you the first and last five rows.")
         ),
         column(
           width = 5,

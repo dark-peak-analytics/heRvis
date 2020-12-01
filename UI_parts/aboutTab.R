@@ -43,7 +43,9 @@ aboutTab <- tabPanel(
           tags$br(),
           tags$ul(
             tags$li(HTML("<b>Rami Cosulich</b>, University of Sheffield")), 
-            tags$li(HTML("<b>Frederick Thielen</b>, Erasmus University Rotterdam"))
+            tags$li(HTML("<b>Frederick Thielen</b>, Erasmus University Rotterdam")),
+            tags$li(HTML("<b>Hazel Squires</b>, University of Sheffield"))
+            
           )
         ),
         tags$br()

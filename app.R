@@ -54,7 +54,7 @@ sample_names = c("Base Case", "Dupimap","Supimap")
 
 
 ui <- navbarPage(
-  title = "heRvis",
+  title = div(class = "clear_h","heRvis", span("beta 0.1",style = "color: #68D3BF")),
   theme = shinytheme("slate"),
   id = "main_panel",
   header = includeCSS("www/custom.css"),

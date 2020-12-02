@@ -1,5 +1,11 @@
-makeCEAC = function (total_costs = example_TC, total_qalys = example_TQ, colors = NULL,
-    treatment = c("treat 1", "notreat"), lambda_min = 0, lambda_max = 50000) 
+makeCEAC = function (total_costs = example_TC,
+                     total_qalys = example_TQ,
+                     colors = NULL,
+                     treatment = c("treat 1", "notreat"),
+                     lambda_min = 0,
+                     lambda_max = 50000,
+                     currency = "GBP")
+  
 {
 
   # return an empty data-set if there is no data.
@@ -24,24 +30,27 @@ makeCEAC = function (total_costs = example_TC, total_qalys = example_TQ, colors 
             value = apply(nb, 1, mean))
         df_CEAC = rbind(df_CEAC, nb)
     }
-    plot <- ggplot2::ggplot(data = df_CEAC, ggplot2::aes(x = lambda, 
-        y = value, col = Intervention)) + ggplot2::theme_minimal() + 
-        ggplot2::theme(legend.position = "top", legend.text = ggplot2::element_text(size = 11), 
-            legend.title = ggplot2::element_text(size = 11), 
-            title = ggplot2::element_text(size = 11)) + ggplot2::geom_line(size = 1.5) + 
-        ggplot2::scale_y_continuous(breaks = seq(0, 1, 0.25), 
-            limits = c(0, 1), name = "Probability most cost-effective") + 
-        ggplot2::xlab(label = "Willingness-to-pay (GBP)") + ggplot2::labs(title = "Cost Effectiveness Acceptability Curves", 
-        subtitle = "The probability each preferred intervention is most cost effective against willingness to pay for each QALY threshold.") + 
-        ggplot2::scale_color_manual(name = "Treatment", values = legend_colors) + 
-        theme(
-                  legend.position = "top",
-                  legend.text = element_text(size = 14),
-                  legend.title = element_text(size = 14),
-                  axis.text.x = element_text(size = 14),
-                  axis.text.y = element_text(size = 14),
-                  title = element_text(size = 14)
-                )
+    
+    plot <- ggplot2::ggplot(data = df_CEAC, 
+            ggplot2::aes(x = lambda, y = value, col = Intervention)) + 
+      
+      ggplot2::theme_minimal() + 
+      ggplot2::geom_line(size = 1.5) +
+      ggplot2::scale_y_continuous(breaks = seq(0, 1, 0.25),
+                                  limits = c(0, 1),
+                                  name = "Probability most cost-effective") +
+      ggplot2::xlab(label = paste0("Willingness-to-pay (", currency, ")")) +
+      ggplot2::labs(title = "Cost Effectiveness Acceptability Curves",
+                    subtitle = "The probability each preferred intervention is most cost effective against willingness to pay for each QALY threshold.") +
+      ggplot2::scale_color_manual(name = "Treatment", values = legend_colors) +
+      theme(
+        legend.position = "top",
+        legend.text = element_text(size = 14),
+        legend.title = element_text(size = 14),
+        axis.text.x = element_text(size = 14),
+        axis.text.y = element_text(size = 14),
+        title = element_text(size = 14)
+      )
     
     return(plot)
 }

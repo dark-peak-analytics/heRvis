@@ -1,6 +1,6 @@
 # icertable 
 createICERtable = function (total_costs = example_TC, total_qalys = example_TQ, 
-                            ref_index = 1, ci = T) 
+                            ref_index = 1, ci = T, currency = "GBP") 
 {
 
 # return an empty data-set if there is no data.
@@ -42,13 +42,24 @@ ref_index = which(colnames(total_costs) == ref_index)
   NB30 = total_qalys * 30000 - total_costs
   INB30 = NB30[, ] - NB30[, 1]
   INB30 = apply(INB30, 2, c_f, 0, ci)
+  
   res_table = as.data.frame(t(data.frame(mean_C, inc.C, mean_Q, 
                                          inc.Q, INB20, INB30, stringsAsFactors = F)))
+  
   rownames(res_table) = c("Costs", "Incremental Costs", "QALYs", 
                           "Incremental QALYs", "INB 20,000 GBP", "INB 30,000 GBP")
-  res_table$temp = c("Costs (GBP)", "Costs (GBP)", "QALYs", 
-                     "QALYs", "Incremental Net Benefit (GBP)", "Incremental Net Benefit (GBP)")
-  DT::datatable(data = res_table, class = "compact cell-border", 
+  
+  res_table$temp = c(paste0("Costs (", currency,")"), # Costs (input$currency)
+                     paste0("Costs (", currency,")"), # Costs (input$currency)
+                     "QALYs", 
+                     "QALYs",
+                     paste0("Incremental Net Benefit (", currency,")"), # INB (input$currency)
+                     paste0("Incremental Net Benefit (", currency,")")) # INB (input$currency)
+  
+  # return data-table
+  
+  DT::datatable(data = res_table, 
+                class = "compact cell-border", 
                 options = list(colReorder = TRUE, 
                                dom = "tB", 
                                buttons = c("copy","csv", "excel", "pdf", "print"), 
@@ -60,6 +71,11 @@ ref_index = which(colnames(total_costs) == ref_index)
                                initComplete = DT::JS("function(settings, json) {",
                                                      "$(this.api().table().header()).css({'background-color': '#D3D3D3', 'color': '#000'});",
                                                      "}")), 
-                extensions = c("Buttons", "ColReorder","RowGroup"), 
-                rownames = c("Costs", "Incremental Costs","QALYs", "Incremental QALYs", "20,000 GBP", "30,000 GBP"))
+                
+                extensions = c("Buttons", "ColReorder","RowGroup"),
+                
+                rownames = c("Costs", "Incremental Costs",
+                             
+                             "QALYs", "Incremental QALYs", 
+                             paste("20,000", currency), paste("30,000", currency))) # 20,000 input$currency
 }

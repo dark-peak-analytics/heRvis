@@ -3,7 +3,8 @@
 makeCEPlane = function (total_costs = example_TC, total_qalys = example_TQ, 
                         comparitor = "notreat", treatment = "treat 1", thresh = 30000,
                         colors = NULL, 
-                        show_ellipse = F) 
+                        show_ellipse = F,
+                        currency = "GBP") 
 {
 
   # return an empty data-set if there is no data.
@@ -15,7 +16,7 @@ makeCEPlane = function (total_costs = example_TC, total_qalys = example_TQ,
   ce_plane_plot = ggplot2::ggplot() + ggplot2::geom_vline(xintercept = 0) + 
     ggplot2::geom_hline(yintercept = 0) + ggplot2::theme_minimal() + 
     ggplot2::labs(title = "Cost-effectiveness Plane", subtitle = paste0("Results of Probabilistic Sensitivity Analysis:")) + 
-    ggplot2::xlab("Incremental QALYs") + ggplot2::ylab("Incremental Costs (GBP)")
+    ggplot2::xlab("Incremental QALYs") + ggplot2::ylab(paste0("Incremental Costs (", currency,")"))
   if (!is.null(thresh)) {
     ce_plane_plot = ce_plane_plot + ggplot2::geom_abline(slope = thresh, 
                                                          linetype = "dashed", intercept = 0)

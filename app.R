@@ -291,7 +291,8 @@ server <- function(input, output, session){
             color=colors,
             thres = input$lambda,
             comparitor = input$ref_index,
-            treatment = treatment_names[-which(treatment_names == input$ref_index)]
+            treatment = treatment_names[-which(treatment_names == input$ref_index)],
+            currency = input$currency
           )
         })
         
@@ -311,7 +312,8 @@ server <- function(input, output, session){
                      total_qalys = qalys,
                      color=colors,
                      comparitor = input$ref_index,
-                     treatment = treatment_names[-which(treatment_names == input$ref_index)]
+                     treatment = treatment_names[-which(treatment_names == input$ref_index)],
+                     currency = input$currency
                    ))
           }
         )
@@ -323,7 +325,8 @@ server <- function(input, output, session){
             total_costs = costs,
             total_qalys = qalys,
             colors = colors,
-            treatment = treatment_names
+            treatment = treatment_names,
+            currency = input$currency
           )
         })
 
@@ -340,7 +343,8 @@ server <- function(input, output, session){
                      total_costs = costs,
                      colors = colors,
                      total_qalys = qalys,
-                     treatment = treatment_names
+                     treatment = treatment_names,
+                     currency = input$currency
                    ))
           }
         )
@@ -352,7 +356,8 @@ server <- function(input, output, session){
           total_costs = costs,
           total_qalys = qalys,
           ref_index = input$ref_index,
-          ci = input$show_95ci
+          ci = input$show_95ci,
+          currency = input$currency
           )
       })
 

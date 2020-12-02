@@ -14,7 +14,11 @@ inputdataTab <- tabPanel(
           label = "How many strategies?",
           choices = c(2:6)
         ),
-        numericInput("lambda", label = "Threshold", value = 30000, min = 0, max = 200000),
+        fluidRow(
+        column(width = 6, numericInput("lambda", label = "WTP Threshold", value = 30000, min = 0, max = 200000)),
+        column(width = 6, textInput("currency", label = "Currency", value = "GBP"))
+        ),
+        
         checkboxInput("remove_1st_row", label = "Remove 1st row labels"),
         div(
           style = "padding-top:10px",

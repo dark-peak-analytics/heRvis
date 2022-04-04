@@ -1,11 +1,8 @@
-# heRvis - Health Economic Visualisations in R
+# heRvis - Health Economic Visualisations in R   <img src="www/hexSticker.png" align="right" width="120" />
 
 [![GitHub release](https://img.shields.io/badge/R-HEDS-green)](https://img.shields.io/badge/R-hello-green)
 
 Shiny app used to build visualizations for Health Economic Evaluations which incorporate uncertainty.
-
-![PLOT 1](https://github.com/RobertASmith/heRvis/blob/main/www/hexSticker.png)
-
 
 [Robert Smith](https://www.linkedin.com/in/robert-smith-53b28438) and [Paul Schneider](https://www.sheffield.ac.uk/scharr/staff-pgrs/studentprofiles/paulschneider)
 
